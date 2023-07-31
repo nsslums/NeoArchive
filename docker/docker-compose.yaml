@@ -5,15 +5,11 @@ services:
       context: ../
       dockerfile: docker/app/Dockerfile
     network_mode: "host"
-    #command: bundle exec rails s -p 3000 -b '0.0.0.0'
-    #image: php
     volumes:
       - ../in_iass:/var/www/in_iass
       - ../in_auth:/var/www/in_auth
-    #ports:
-    #  - "3000:3000"
-    #depends_on:
-    #  - db
+    environment:
+      - DB_HOST=127.0.0.1
   web:
     build:
       context: ../
