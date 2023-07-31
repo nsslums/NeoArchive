@@ -5,7 +5,7 @@
 //配列的に$config_serviceと$config_serviceUrlは同順である必要があります。
 //サービスはDBに登録する必要があります。
 $config_service=['admin', 'iass', 'cu_admin', 'matchResult'];//設定可能サービス
-$config_serviceUrl=['accountAdmin.php', 'https://***REMOVED***/index.php', 'https://***REMOVED***/index.php', 'https://***REMOVED***?p=gameList'];//サービスURL
-$config_url='https://***REMOVED***/';//wwwroot
+$config_serviceUrl=['accountAdmin.php', 'http://***REMOVED***/index.php', 'http://***REMOVED***/index.php', 'https://***REMOVED***?p=gameList'];//サービスURL
+$config_url='http://***REMOVED***/';//wwwroot
 $cookiedomain='***REMOVED***';//cookieアクセス可能ドメイン
 ?>
