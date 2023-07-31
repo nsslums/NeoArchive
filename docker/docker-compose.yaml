@@ -10,6 +10,8 @@ services:
       - ../in_auth:/var/www/in_auth
     environment:
       - DB_HOST=127.0.0.1
+      - HTTP_S_DOMAIN=binarymonster.net
+      - HTTP_SCHEMA=http
   web:
     build:
       context: ../
