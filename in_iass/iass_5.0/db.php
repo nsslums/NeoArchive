@@ -1,6 +1,6 @@
 <?php
 //db接続情報
-$db_host='localhost';
+$db_host='127.0.0.1';
 $db_name='in_iass';
 $db_user='in_iass';
 $db_password='ph9gfibH%Awnr';
