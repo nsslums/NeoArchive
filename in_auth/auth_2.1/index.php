@@ -112,13 +112,22 @@ if(isset($_COOKIE['terminalkey'])==1){
     //keyなし
     if(authDb_encvalue($authDb->query('SELECT count(terminalkey) FROM terminal WHERE terminalkey="'.$terminalkey.'";'))==0){
         //terminalkey削除
-        setcookie('terminalkey', '', $time-3600);
+        //DBリセット時など
+        /*
+        setcookie('terminalkey', '', -3600, $cookiedomain);
+        setcookie('sessionkey', '', -3600, $cookiedomain);
         input(1);
+        */
+        goto newTerminal;
+        error_log('cookieにterminalkeyが存在しますがdatabaseに存在しないため、新規端末として扱います。');
+        exit();
     }
     //UPDATE
     $v=$authDb->query('UPDATE terminal SET id='.$id.', terminaltime='.$terminaltime.', sessionkey="'.$sessionkey.'", sessiontime='.$sessiontime.', hua="'.$hua.'" WHERE terminalkey="'.$terminalkey.'";');
     authDb_checkError($v);
 }else{
+    newTerminal:
+    //新規端末
     $terminalkey=il_rand(16);
     //使用中のkey
     if(authDb_encvalue($authDb->query('SELECT count(terminalkey) FROM terminal WHERE terminalkey="'.$terminalkey.'";'))==1){
@@ -129,7 +138,6 @@ if(isset($_COOKIE['terminalkey'])==1){
     authDb_checkError($v);
 }
 
-//cookie, service設定
 include 'config.php';
 
 //cookie登録
