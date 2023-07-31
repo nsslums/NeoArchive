@@ -22,8 +22,8 @@ if(file_exists($dir)==0){
 
 function write_log($text){
         umask(0);
-        $log = date("Y-m-d H:i:s") . " {$_SERVER['REQUEST_URI']}    {$text}\n";
-        error_log($log, 3, "access.log");
+        $log = 'movie2.php: ' . date("Y-m-d H:i:s") . " {$_SERVER['REQUEST_URI']}    {$text}\n";
+        error_log($log);
 }
 
 $file = $dir;                                                      // 動画ファイルへのパス
