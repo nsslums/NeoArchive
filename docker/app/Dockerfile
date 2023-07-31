@@ -8,6 +8,7 @@ RUN docker-php-ext-install -j$(nproc) pdo pdo_mysql &&\
 mkdir -p /mnt/persistent-volume/iass/data &&\
 mkdir -p /mnt/persistent-volume/iass/dustbox &&\
 mkdir -p /mnt/persistent-volume/iass/uploadtmp &&\
+mkdir -p /mnt/persistent-volume/iass/userdata &&\
 chown -R www-data:www-data /mnt/persistent-volume/iass
 
 # php.iniの追加
