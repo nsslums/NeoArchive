@@ -1,9 +1,9 @@
 <?php
 //データベース接続情報はdb.phpに記述
 //データ保存場所
-$cfg_datadir='/mnt/ceph/iass/data/';
-$cfg_dustbox='/mnt/ceph/iass/dustbox/';
-$cfg_uploadtmp='/mnt/ceph/iass/uploadtmp/';
+$cfg_datadir='/mnt/persistent-volume/iass/data/';
+$cfg_dustbox='/mnt/persistent-volume/iass/dustbox/';
+$cfg_uploadtmp='/mnt/persistent-volume/iass/uploadtmp/';
 $cfg_userdata='/var/www/in_iass/userdata/';
 $cfg_session='/var/www/in_auth/auth_2.1/session.php';
 $cfg_session_multiacces='/var/www/in_auth/auth_2.1/session-multiacces.php';
