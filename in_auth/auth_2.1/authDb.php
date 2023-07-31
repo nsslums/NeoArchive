@@ -1,7 +1,7 @@
 <?php
 //※proceError.phpをincludeするかproceError()を宣言してください。
 //設定
-$db_host='localhost';//接続先DBのホスト名
+$db_host='127.0.0.1';//接続先DBのホスト名
 $db_name='in_auth';//DB名
 $db_user='in_auth';//User名
 $db_password='***REMOVED***';//パスワード
@@ -10,6 +10,7 @@ $db_password='***REMOVED***';//パスワード
 try{
     $authDb=new PDO('mysql:host='.$db_host.'; dbname='.$db_name.';setchar=utf-8',$db_user,$db_password,[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 }catch(PDOException $e){
+    error_log($e);
     authError('DBに接続できません。');
 }
 
