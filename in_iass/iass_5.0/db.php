@@ -1,6 +1,6 @@
 <?php
 //db接続情報
-$db_host='127.0.0.1';
+$db_host=getenv('DB_HOST');
 $db_name='in_iass';
 $db_user='in_iass';
 $db_password='***REMOVED***';
