@@ -58,9 +58,12 @@ if(isset($_GET['aid'])){
                     $qualitySelect='';
                     $downloadSelect = '';
                     foreach($coolInfo[$i]['quality'] as $quality_link){
-                        $url="'download.php?aid=".$aid."&id=".$coolInfo[$i]["id"]."&quality=".$quality_link."'";
-                        $qualitySelect.='<input type="button" value="'.$quality_link.'('.$cfg_qualityDisplay[$quality_link].')" onclick="redirect('.$url.')">';
-                        $downloadSelect.='<input type="button" value="ダウンロード>'.$quality_link.'" onclick="redirect('.$url.')">';
+                        //再生
+                        $purl="'anime.php?aid=".$aid."&id=".$coolInfo[$i]["id"]."&quality=".$quality_link."'";
+                        $qualitySelect.='<input type="button" value="'.$quality_link.'('.$cfg_qualityDisplay[$quality_link].')" onclick="redirect('.$purl.')">';
+                        //ダウンロード
+                        $dlurl="'download.php?aid=".$aid."&id=".$coolInfo[$i]["id"]."&quality=".$quality_link."'";
+                        $downloadSelect.='<input type="button" value="ダウンロード>'.$quality_link.'" onclick="redirect('.$dlurl.')">';
                     }
                     //次動画情報
                     if(isset($coolInfo[$i+1]['number'])){
