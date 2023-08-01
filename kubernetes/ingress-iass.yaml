@@ -28,10 +28,10 @@ spec:
   # ingressClassName: nginx
   tls:
   - hosts:
-    - "iass.v-sys.maruru.me"
+    - "iass.binarymonster.net"
     secretName: iass-ingress-tls-secret
   rules:
-  - host: "iass.v-sys.maruru.me"
+  - host: "iass.binarymonster.net"
     http:
       paths:
       - path: /

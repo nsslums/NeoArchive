@@ -21,10 +21,10 @@ spec:
   # ingressClassName: nginx
   tls:
   - hosts:
-    - "auth.v-sys.maruru.me"
+    - "auth.binarymonster.net"
     secretName: auth-ingress-tls-secret
   rules:
-  - host: "auth.v-sys.maruru.me"
+  - host: "auth.binarymonster.net"
     http:
       paths:
       - path: /
