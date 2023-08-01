@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iass
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iass
+  template:
+    metadata:
+      labels:
+        app: iass
+    spec:
+      containers:
+        - name: app
+          image: "gitlab-registry.maruru.me/ilts/iass:1.0.0-app"
+          env:
+            - name: DB_HOST
+              value: mariadb.local.irumaru.net
+            - name: HTTP_S_DOMAIN
+              value: v-sys.maruru.me
+            - name: HTTP_SCHEMA
+              value: https
+          volumeMounts:
+            - mountPath: "/mnt/persistent-volume"
+              name: data
+        - name: web
+          image: "gitlab-registry.maruru.me/ilts/iass:1.0.0-web"
+          ports:
+          - containerPort: 80
+          - containerPort: 81
+      imagePullSecrets:
+        - name: gitlab-deploy-token
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: pvc-data
+            readOnly: false
