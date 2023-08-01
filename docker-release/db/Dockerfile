@@ -1,3 +1,3 @@
 FROM mariadb:lts AS db
 
-COPY docker/db/sql /docker-entrypoint-initdb.d
+COPY docker-release/db/sql /docker-entrypoint-initdb.d

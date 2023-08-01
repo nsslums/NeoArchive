@@ -1,8 +1,8 @@
 FROM nginx:stable AS web
 
 # copy nginx-config
-COPY docker/web/iass.conf /etc/nginx/conf.d/iass.conf
-COPY docker/web/auth.conf /etc/nginx/conf.d/auth.conf
+COPY docker-release/web/iass.conf /etc/nginx/conf.d/iass.conf
+COPY docker-release/web/auth.conf /etc/nginx/conf.d/auth.conf
 
 # copy app
 COPY in_auth /var/www/in_auth
