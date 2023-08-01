@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: "gitlab-registry.maruru.me/ilts/iass:1.0.0-app"
+          image: "gitlab-registry.maruru.me/ilts/iass:1.0.2-app"
           env:
             - name: DB_HOST
               value: mariadb.local.irumaru.net
@@ -26,7 +26,7 @@ spec:
             - mountPath: "/mnt/persistent-volume"
               name: data
         - name: web
-          image: "gitlab-registry.maruru.me/ilts/iass:1.0.0-web"
+          image: "gitlab-registry.maruru.me/ilts/iass:1.0.2-web"
           ports:
           - containerPort: 80
           - containerPort: 81
