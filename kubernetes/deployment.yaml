@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: "***REMOVED***/***REMOVED***/iass:1.0.0-app"
+          image: "***REMOVED***/***REMOVED***/iass:1.0.2-app"
           env:
             - name: DB_HOST
               value: ***REMOVED***
@@ -26,7 +26,7 @@ spec:
             - mountPath: "/mnt/persistent-volume"
               name: data
         - name: web
-          image: "***REMOVED***/***REMOVED***/iass:1.0.0-web"
+          image: "***REMOVED***/***REMOVED***/iass:1.0.2-web"
           ports:
           - containerPort: 80
           - containerPort: 81
