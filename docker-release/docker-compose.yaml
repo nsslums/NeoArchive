@@ -4,7 +4,7 @@ services:
     build:
       context: ../
       dockerfile: docker-release/app/Dockerfile
-    image: ***REMOVED***/***REMOVED***/iass:1.0.3-app
+    image: ***REMOVED***/***REMOVED***/iass:1.0.4-app
     network_mode: "host"
     # アプリケーションファイルはコンテナレイヤーで追加
     #volumes:
