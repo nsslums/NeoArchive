@@ -1,4 +1,4 @@
-FROM php:8.2-fpm AS app
+FROM php:8.2.21-fpm AS app
 
 # pdo-mysqlの追加
 RUN docker-php-ext-install -j$(nproc) pdo pdo_mysql

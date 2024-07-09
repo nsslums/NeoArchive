@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: "gitlab-registry.maruru.me/ilts/iass:1.0.3-app"
+          image: "gitlab-registry.maruru.me/ilts/iass:1.0.4-app"
           env:
             - name: DB_HOST
               value: mariadb.local.irumaru.net
