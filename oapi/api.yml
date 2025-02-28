@@ -598,9 +598,11 @@ components:
         synopsis:
           type: string
           title: synopsis
+          description: あらすじ
         cours:
           type: string
           title: cours
+          description: クール(秋アニメ,冬アニメ,春アニメ,夏アニメ)
         cast:
           type: string
           title: cast
