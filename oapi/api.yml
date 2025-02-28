@@ -604,9 +604,11 @@ components:
         cast:
           type: string
           title: cast
+          description: 出演者
         production:
           type: string
           title: production
+          description: 制作会社
       required:
         - id
         - series_id
