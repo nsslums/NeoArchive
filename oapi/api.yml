@@ -104,8 +104,100 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultErrorResponse'
+  
+  /tag_list:
+    get:
+      summary: Get tag list
+      tags:
+        - Tag
+      operationId: GetTagList
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+  /tag/{id}:
+    delete:
+      summary: Delete tag
+      tags:
+        - Tag
+      operationId: DeleteTag
+      parameters:
+        - name: id
+          in: path
+          description: Tag ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+  /tag:
+    post:
+      summary: Create tag
+      tags:
+        - Tag
+      operationId: CreateTag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+    put:
+      summary: Update tag
+      tags:
+        - Tag
+      operationId: UpdateTag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
 
-  # /tag:
   /anime/season_list/{series_id}:
     get:
       summary: Get anime season list
@@ -469,9 +561,27 @@ components:
         title:
           type: string
           title: title
+        tags:
+          type: array
+          title: tags
+          items:
+            $ref: '#/components/schemas/Tag'
       required:
         - id
         - title
+
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          title: Tag ID
+        name:
+          type: string
+          title: Tag name
+      required:
+        - id
+        - name
 
     AnimeSeason:
       type: object
@@ -488,15 +598,19 @@ components:
         synopsis:
           type: string
           title: synopsis
+          description: あらすじ
         cours:
           type: string
           title: cours
+          description: クール(秋アニメ,冬アニメ,春アニメ,夏アニメ)
         cast:
           type: string
           title: cast
+          description: 出演者
         production:
           type: string
           title: production
+          description: 制作会社
       required:
         - id
         - series_id
