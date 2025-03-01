@@ -1,5 +1,16 @@
 {
-  "name": "Basic Node.js",
-  "build": { "dockerfile": "Dockerfile" },
-  "remoteUser": "node"
+	"name": "web",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"remoteUser": "node",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"42crunch.vscode-openapi",
+				"esbenp.prettier-vscode",
+				"bradlc.vscode-tailwindcss"
+			]
+		}
+	}
 }
