@@ -1,4 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
+import { AnimeCard } from "~/components/animeCard";
+import Player from "~/components/player";
 import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
@@ -10,8 +12,13 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div className="container m-auto mt-8">
+    <div>
       <Button>Click Me</Button>
+      <AnimeCard Title="test" Description="test"/>
+      <div className="w-3/4">
+      <Player src=""/>
+
+      </div>
     </div>
   );
 }

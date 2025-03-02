@@ -23,7 +23,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <Header />
-        {children}
+        <div className="container m-auto mt-8">{children}</div>
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -20,15 +20,15 @@ import {
 const data: { title: string; href: string }[] = [
   {
     title: "Page 1",
-    href: "/page1",
+    href: "/season/1",
   },
   {
     title: "Page 2",
-    href: "/page2",
+    href: "/season/2",
   },
   {
     title: "Page 3",
-    href: "/page3",
+    href: "/season/3",
   },
 ];
 
@@ -37,6 +37,11 @@ export const Header = () => {
     <header>
       <NavigationMenu>
         <NavigationMenuList>
+          <NavigationMenuItem>
+            <Link to="/" className={navigationMenuTriggerStyle()}>
+              Home
+            </Link>
+          </NavigationMenuItem>
           {data.map((value, index) => (
             <NavigationMenuItem key={index}>
               <Link to={value.href} className={navigationMenuTriggerStyle()}>
