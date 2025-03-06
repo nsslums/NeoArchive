@@ -14,10 +14,9 @@ export default function Index() {
   return (
     <div>
       <Button>Click Me</Button>
-      <AnimeCard Title="test" Description="test"/>
+      <AnimeCard Title="test" Description="test" />
       <div className="w-3/4">
-      <Player src=""/>
-
+        <Player src= "https://devstreaming-cdn.apple.com/videos/streaming/examples/adv_dv_atmos/main.m3u8" />
       </div>
     </div>
   );

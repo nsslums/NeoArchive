@@ -21,7 +21,7 @@ interface PlayerStatus {
   load: number;
   isFullScreen: boolean;
   isPip: boolean;
-  isControllerShow: boolean;
+  showController: boolean;
   showSettings: boolean;
   showAudioDes: boolean;
 }
@@ -47,12 +47,12 @@ export default function Player({ src }: PropsType) {
     showSubtitle: false,
     volume: 0.5,
     isMuted: false,
-    duration: 1,
+    duration: 0,
     seek: 0,
     load: 0,
     isFullScreen: false,
     isPip: false,
-    isControllerShow: true,
+    showController: true,
     showSettings: false,
     showAudioDes: false,
   });
@@ -90,8 +90,7 @@ export default function Player({ src }: PropsType) {
       hls.on(Hls.Events.LEVEL_SWITCHED, (_, data) => {
         console.log(`🎥 HLS Level Switched: ${data.level}`);
         console.log(
-          `🔍 Current Resolution: ${hls?.levels[data.level]?.height}p / ${
-            hls?.levels[data.level]?.codecs
+          `🔍 Current Resolution: ${hls?.levels[data.level]?.height}p / ${hls?.levels[data.level]?.codecs
           }`
         );
         console.log(`📶 Bitrate: ${hls?.levels[data.level]?.bitrate}bps`);
@@ -105,11 +104,13 @@ export default function Player({ src }: PropsType) {
             isPlay: true,
           }))
         )
-        .catch((e) =>
+        .catch(() => {
+
           setPlayerStatus((preState) => ({
             ...preState,
             isPlay: false,
           }))
+        }
         );
 
       hls.subtitleDisplay = playerStatus.showSubtitle;
@@ -213,7 +214,7 @@ export default function Player({ src }: PropsType) {
   const showControlsTemporarily = () => {
     setPlayerStatus((preState) => ({
       ...preState,
-      isControllerShow: true,
+      showController: true,
     }));
 
     if (hideControlsTimeout.current) clearTimeout(hideControlsTimeout.current);
@@ -221,25 +222,29 @@ export default function Player({ src }: PropsType) {
       () =>
         setPlayerStatus((preState) => ({
           ...preState,
-          isControllerShow: false,
+          showController: false,
         })),
       3000
     );
   };
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     const video = videoRef.current;
     if (!video) return;
 
     if (video.paused) {
-      video.play();
+      video.play().then(() =>
+        setPlayerStatus((preState) => ({
+          ...preState,
+          isPlay: true,
+        }))).catch((e) => console.log(e));
     } else {
       video.pause();
+      setPlayerStatus((preState) => ({
+        ...preState,
+        isPlay: false,
+      }))
     }
-    setPlayerStatus((preState) => ({
-      ...preState,
-      isPlay: !video.paused,
-    }));
     showControlsTemporarily();
   };
 
@@ -317,7 +322,7 @@ export default function Player({ src }: PropsType) {
 
   const toggleSubtitle = () => {
     if (!hlsInstance) return;
-    console.log(!hlsInstance.subtitleDisplay, !playerStatus.showSubtitle);
+    if (hlsInstance.allSubtitleTracks.length === 0) return;
     hlsInstance.subtitleDisplay = !hlsInstance.subtitleDisplay;
     setPlayerStatus((preState) => ({
       ...preState,
@@ -365,21 +370,20 @@ export default function Player({ src }: PropsType) {
 
   return (
     <div
-      className={`relative text-white bg-black ${
-        playerStatus.isControllerShow ? "" : "cursor-none"
-      }`}
+      className={`relative text-white bg-black ${playerStatus.showController ? "" : "cursor-none"
+        }`}
       ref={playerRoot}
       onMouseEnter={() =>
         setPlayerStatus((preState) => ({
           ...preState,
-          isControllerShow: true,
+          showController: true,
         }))
       }
       onMouseMove={showControlsTemporarily}
       onMouseLeave={() =>
         setPlayerStatus((preState) => ({
           ...preState,
-          isControllerShow: false,
+          showController: false,
         }))
       }
       tabIndex={0}
@@ -392,19 +396,18 @@ export default function Player({ src }: PropsType) {
       >
         <video ref={videoRef} width="100%" />
       </div>
+      {playerStatus.showSettings ? <div className="absolute top-0 left-0 w-full h-full" onClick={toggleSettings} /> : null}
       <div
-        className={`w-full absolute bottom-0 text-xs z-10 ${
-          playerStatus.isControllerShow
-            ? "opacity-100"
-            : "opacity-0 pointer-events-none"
-        } duration-200`}
+        className={`w-full absolute bottom-0 text-xs z-10 ${playerStatus.showController
+          ? "opacity-100"
+          : "opacity-0 pointer-events-none"
+          } duration-200`}
       >
         <div
-          className={`px-4 mb-1 duration-200 absolute right-0 bottom-[45px] ${
-            playerStatus.showSettings
-              ? "opacity-100"
-              : "opacity-0 pointer-events-none"
-          }`}
+          className={`px-4 mb-1 duration-200 absolute right-0 bottom-[45px] ${playerStatus.showSettings
+            ? "opacity-100"
+            : "opacity-0 pointer-events-none"
+            }`}
         >
           <ul className="h-40 overflow-y-scroll inline-block bg-black rounded-lg p-1 text-sm">
             {qualities.map((q) => (
@@ -412,9 +415,8 @@ export default function Player({ src }: PropsType) {
                 key={q.level}
                 value={q.level}
                 onClick={() => handleChangeLevel(q.level)}
-                className={`cursor-pointer my-1 hover:bg-gray-200 rounded-sm ${
-                  selectedQuality === q.level ? "bg-blue-500" : ""
-                }`}
+                className={`cursor-pointer my-1 hover:bg-gray-200 rounded-sm ${selectedQuality === q.level ? "bg-blue-500" : ""
+                  }`}
               >
                 {q.name} / {q.codec}
               </li>
@@ -444,7 +446,7 @@ export default function Player({ src }: PropsType) {
               value={playerStatus.seek || 0}
               onChange={handleSeek}
               disabled={playerStatus.duration == 0}
-              className="h-1 block absolute top-0 rounded-sm w-full opacity-0 z-20"
+              className="h-1 block absolute top-0 rounded-sm w-full opacity-0 z-20 cursor-pointer"
             />
           </div>
 
@@ -455,7 +457,7 @@ export default function Player({ src }: PropsType) {
                   togglePlay();
                 }}
               >
-                {playerStatus.isPlay ? <FaPlay /> : <FaPause />}
+                {playerStatus.isPlay ? <FaPause size={18} /> : <FaPlay size={18} />}
               </button>
               <div
                 className="flex gap-2 items-center"
@@ -473,12 +475,11 @@ export default function Player({ src }: PropsType) {
                 }
               >
                 <button onClick={toggleMute}>
-                  {playerStatus.isMuted ? <FaVolumeXmark /> : <FaVolumeLow />}
+                  {playerStatus.isMuted ? <FaVolumeXmark size={18} /> : <FaVolumeLow size={18} />}
                 </button>
                 <div
-                  className={`relative duration-200 h-4 ${
-                    playerStatus.showAudioDes ? "w-20" : "w-0"
-                  }`}
+                  className={`relative duration-200 h-4 ${playerStatus.showAudioDes ? "w-20" : "w-0"
+                    }`}
                 >
                   <span className="bg-gray-300 h-1 block absolute top-1/2 -translate-y-1/2 left-0 rounded-sm w-full"></span>
                   <span
@@ -496,7 +497,7 @@ export default function Player({ src }: PropsType) {
                     onChange={(e) => {
                       handleVolumeChange(parseFloat(e.target.value));
                     }}
-                    className="opacity-0 absolute h-1 w-full top-1/2 -translate-y-1/2 left-0 z-20"
+                    className="opacity-0 absolute h-1 w-full top-1/2 -translate-y-1/2 left-0 z-20 cursor-pointer"
                   />
                 </div>
               </div>
@@ -509,19 +510,19 @@ export default function Player({ src }: PropsType) {
             <div className="flex gap-2 items-center">
               <button onClick={toggleSubtitle}>
                 {playerStatus.showSubtitle ? (
-                  <MdOutlineSubtitles />
+                  <MdOutlineSubtitles size={18} />
                 ) : (
-                  <MdOutlineSubtitlesOff />
+                  <MdOutlineSubtitlesOff size={18} />
                 )}
               </button>
               <button onClick={toggleSettings}>
-                <RiSettings3Fill />
+                <RiSettings3Fill size={18} />
               </button>
               <button onClick={handlePip}>
                 {playerStatus.isPip ? (
-                  <PiPictureInPictureFill />
+                  <PiPictureInPictureFill size={18} />
                 ) : (
-                  <PiPictureInPicture />
+                  <PiPictureInPicture size={18} />
                 )}
               </button>
               <button
@@ -529,14 +530,15 @@ export default function Player({ src }: PropsType) {
                   move(-10);
                 }}
               >
-                <IoReturnDownBack />
+                <IoReturnDownBack size={18} />
               </button>
               <button
                 onClick={() => {
                   move(10);
                 }}
+                className="rotate-180"
               >
-                <IoReturnDownBack rotate={180} />
+                <IoReturnDownBack size={18} />
               </button>
               <button
                 onClick={() => {
@@ -544,9 +546,9 @@ export default function Player({ src }: PropsType) {
                 }}
               >
                 {playerStatus.isFullScreen ? (
-                  <RiFullscreenExitLine />
+                  <RiFullscreenExitLine size={18} />
                 ) : (
-                  <RiFullscreenFill />
+                  <RiFullscreenFill size={18} />
                 )}
               </button>
             </div>
