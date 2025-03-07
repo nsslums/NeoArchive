@@ -637,6 +637,7 @@ components:
       required:
         - id
         - season_id
+        - video_id
 
     Video:
       type: object
