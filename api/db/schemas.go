@@ -34,10 +34,10 @@ type AnimeSeason struct {
 type AnimeEpisode struct {
 	gorm.Model
 	ID            uint `gorm:"primaryKey,autoIncrement"`
-	VideoID       uint
 	AnimeSeasonID uint
+	VideoID       uint
 	Subtitle      string
-	Number        int
+	Number        string
 	Video         Video `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:CASCADE;"`
 }
 
@@ -53,5 +53,5 @@ type VideoLog struct {
 	ID           uint `gorm:"primaryKey,autoIncrement"`
 	VideoID      uint
 	PlaybackTime time.Time
-	Video        Video `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:CASCADE;"`
+	Video        Video
 }

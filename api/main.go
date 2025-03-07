@@ -4,7 +4,6 @@ import (
 	"log/slog"
 
 	"github.com/irumaru/iass/api/api"
-	"github.com/irumaru/iass/api/db"
 )
 
 func main() {
@@ -12,8 +11,4 @@ func main() {
 
 	// Start API Server
 	api.Start()
-
-	// Debug
-	db := db.Get()
-	slog.Info("DB: ", db)
 }

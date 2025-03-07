@@ -7,10 +7,10 @@ import (
 func migrate() {
 	slog.Info("Migrating database schema")
 
-	db.AutoMigrate(&Series{})
-	db.AutoMigrate(&Tag{})
-	db.AutoMigrate(&AnimeSeason{})
-	db.AutoMigrate(&AnimeEpisode{})
 	db.AutoMigrate(&Video{})
 	db.AutoMigrate(&VideoLog{})
+	db.AutoMigrate(&AnimeEpisode{})
+	db.AutoMigrate(&AnimeSeason{})
+	db.AutoMigrate(&Series{})
+	db.AutoMigrate(&Tag{})
 }

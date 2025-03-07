@@ -3,13 +3,12 @@ package api
 import (
 	"log/slog"
 
+	"github.com/irumaru/iass/api/apiController"
 	"github.com/irumaru/iass/api/apiInterface"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echomiddleware "github.com/oapi-codegen/echo-middleware"
 )
-
-type apiController struct{}
 
 var e *echo.Echo
 
@@ -18,6 +17,7 @@ var e *echo.Echo
 func init() {
 	slog.Info("Initializing API Server")
 
+	// Create API Server
 	e = echo.New()
 
 	// OpenAPIの仕様に沿っているかリクエストをバリデーションするミドルウェアを作成&追加
@@ -31,7 +31,7 @@ func init() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	api := apiController{}
+	api := apiController.ApiController{}
 	apiInterface.RegisterHandlers(e, api)
 }
 
