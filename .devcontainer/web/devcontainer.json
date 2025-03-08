@@ -1,5 +1,24 @@
 {
-  "name": "Basic Node.js",
-  "build": { "dockerfile": "Dockerfile" },
-  "remoteUser": "node"
+  "name": "web",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "mounts": [
+    {
+      "source": "node_modules",
+      "target": "/workspaces/iass/web/node_modules",
+      "type": "volume"
+    }
+  ],
+  "remoteUser": "node",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "42crunch.vscode-openapi",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  },
+  "postStartCommand": "sudo chown -R node:node /workspaces/iass/web/node_modules"
 }
