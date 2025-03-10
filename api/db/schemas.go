@@ -26,7 +26,7 @@ type AnimeSeason struct {
 	Title        string
 	Synopsis     string
 	Cours        string
-	Cast         string
+	Casts        string
 	Production   string
 	AnimeEpisode []AnimeEpisode `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:CASCADE;"`
 }

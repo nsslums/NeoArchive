@@ -17,7 +17,7 @@ func (a ApiController) CreateAnimeSeason(ctx echo.Context) error {
 		animeSeasonT.Title = animeSeasonB.Title
 		animeSeasonT.Synopsis = StringPtoV(animeSeasonB.Synopsis, "")
 		animeSeasonT.Cours = StringPtoV(animeSeasonB.Cours, "")
-		animeSeasonT.Cast = StringPtoV(animeSeasonB.Cast, "")
+		animeSeasonT.Casts = StringPtoV(animeSeasonB.Casts, "")
 		animeSeasonT.Production = StringPtoV(animeSeasonB.Production, "")
 	}
 
@@ -40,7 +40,7 @@ func (a ApiController) GetAnimeSeasonList(ctx echo.Context, seriesId int) error 
 			Title:      AnimeSeasonT.Title,
 			Synopsis:   &AnimeSeasonT.Synopsis,
 			Cours:      &AnimeSeasonT.Cours,
-			Cast:       &AnimeSeasonT.Cast,
+			Casts:      &AnimeSeasonT.Casts,
 			Production: &AnimeSeasonT.Production,
 		}
 		animeSeasonListB = append(animeSeasonListB, animeSeasonB)
@@ -59,7 +59,7 @@ func (a ApiController) UpdateAnimeSeason(ctx echo.Context) error {
 		animeSeasonT.Title = animeSeasonB.Title
 		animeSeasonT.Synopsis = StringPtoV(animeSeasonB.Synopsis, "")
 		animeSeasonT.Cours = StringPtoV(animeSeasonB.Cours, "")
-		animeSeasonT.Cast = StringPtoV(animeSeasonB.Cast, "")
+		animeSeasonT.Casts = StringPtoV(animeSeasonB.Casts, "")
 		animeSeasonT.Production = StringPtoV(animeSeasonB.Production, "")
 	}
 

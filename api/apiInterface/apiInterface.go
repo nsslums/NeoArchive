@@ -33,8 +33,8 @@ type AnimeEpisode struct {
 
 // AnimeSeason defines model for AnimeSeason.
 type AnimeSeason struct {
-	// Cast 出演者
-	Cast *string `json:"cast,omitempty"`
+	// Casts 出演者
+	Casts *string `json:"casts,omitempty"`
 
 	// Cours クール(秋アニメ,冬アニメ,春アニメ,夏アニメ)
 	Cours *string `json:"cours,omitempty"`
@@ -3513,28 +3513,28 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 var swaggerSpec = []string{
 
 	"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",
-	"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",
+	"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",
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

@@ -606,9 +606,9 @@ components:
           type: string
           title: cours
           description: クール(秋アニメ,冬アニメ,春アニメ,夏アニメ)
-        cast:
+        casts:
           type: string
-          title: cast
+          title: casts
           description: 出演者
         production:
           type: string
