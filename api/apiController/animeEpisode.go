@@ -26,13 +26,14 @@ func (a ApiController) GetAnimeEpisodeList(ctx echo.Context, seasonId int) error
 	animeEpisodeListT := []db.AnimeEpisode{}
 	animeEpisodeListB := []apiInterface.AnimeEpisode{}
 
-	result := dbc.Where("season_id = ?", seasonId).Find(&animeEpisodeListT)
+	result := dbc.Where("anime_season_id = ?", seasonId).Find(&animeEpisodeListT)
 	if result.Error != nil {
 		return ctx.JSON(http.StatusInternalServerError, result.Error)
 	}
 
 	for _, AnimeEpisodeT := range animeEpisodeListT {
 		animeEpisodeB := apiInterface.AnimeEpisode{
+			Id:       int(AnimeEpisodeT.ID),
 			SeasonId: int(AnimeEpisodeT.AnimeSeasonID),
 			VideoId:  int(AnimeEpisodeT.VideoID),
 			Subtitle: &AnimeEpisodeT.Subtitle,
@@ -45,7 +46,18 @@ func (a ApiController) GetAnimeEpisodeList(ctx echo.Context, seasonId int) error
 }
 
 func (a ApiController) UpdateAnimeEpisode(ctx echo.Context) error {
-	return ctx.JSON(http.StatusMethodNotAllowed, "Method Not Allowed")
+	animeEpisodeB := apiInterface.AnimeEpisode{}
+	animeEpisodeT := db.AnimeEpisode{}
+
+	conversionBind := func() {
+		animeEpisodeT.ID = uint(animeEpisodeB.Id)
+		animeEpisodeT.AnimeSeasonID = uint(animeEpisodeB.SeasonId)
+		animeEpisodeT.VideoID = uint(animeEpisodeB.VideoId)
+		animeEpisodeT.Subtitle = StringPtoV(animeEpisodeB.Subtitle, "")
+		animeEpisodeT.Number = StringPtoV(animeEpisodeB.Number, "")
+	}
+
+	return UpdateGeneric(ctx, &animeEpisodeB, &animeEpisodeT, conversionBind)
 }
 
 func (a ApiController) DeleteAnimeEpisode(ctx echo.Context, id int) error {

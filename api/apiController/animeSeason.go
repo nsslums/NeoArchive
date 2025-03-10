@@ -35,6 +35,7 @@ func (a ApiController) GetAnimeSeasonList(ctx echo.Context, seriesId int) error 
 
 	for _, AnimeSeasonT := range animeSeasonListT {
 		animeSeasonB := apiInterface.AnimeSeason{
+			Id:         int(AnimeSeasonT.ID),
 			SeriesId:   int(AnimeSeasonT.SeriesID),
 			Title:      AnimeSeasonT.Title,
 			Synopsis:   &AnimeSeasonT.Synopsis,
@@ -49,7 +50,20 @@ func (a ApiController) GetAnimeSeasonList(ctx echo.Context, seriesId int) error 
 }
 
 func (a ApiController) UpdateAnimeSeason(ctx echo.Context) error {
-	return ctx.JSON(http.StatusMethodNotAllowed, "Method Not Allowed")
+	animeSeasonB := apiInterface.AnimeSeason{}
+	animeSeasonT := db.AnimeSeason{}
+
+	conversionBind := func() {
+		animeSeasonT.ID = uint(animeSeasonB.Id)
+		animeSeasonT.SeriesID = uint(animeSeasonB.SeriesId)
+		animeSeasonT.Title = animeSeasonB.Title
+		animeSeasonT.Synopsis = StringPtoV(animeSeasonB.Synopsis, "")
+		animeSeasonT.Cours = StringPtoV(animeSeasonB.Cours, "")
+		animeSeasonT.Cast = StringPtoV(animeSeasonB.Cast, "")
+		animeSeasonT.Production = StringPtoV(animeSeasonB.Production, "")
+	}
+
+	return UpdateGeneric(ctx, &animeSeasonB, &animeSeasonT, conversionBind)
 }
 
 func (a ApiController) DeleteAnimeSeason(ctx echo.Context, id int) error {

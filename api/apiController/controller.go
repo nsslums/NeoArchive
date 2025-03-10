@@ -55,6 +55,41 @@ func CreateGeneric(ctx echo.Context, apiBody interface{}, tableModel interface{}
 	return ctx.JSON(http.StatusCreated, apiBody)
 }
 
+// Generic Get Entity
+func GetGeneric(ctx echo.Context, apiBody interface{}, tableModel interface{}, conversionBind func(), id int) error {
+	// Get from DB
+	result := dbc.First(&tableModel, id)
+	if result.Error != nil {
+		return ctx.JSON(http.StatusInternalServerError, result.Error)
+	}
+
+	// Convert table model to response body
+	conversionBind()
+
+	// Return response
+	return ctx.JSON(http.StatusOK, apiBody)
+}
+
+// Generic Update Entity
+func UpdateGeneric(ctx echo.Context, apiBody interface{}, tableModel interface{}, conversionBind func()) error {
+	// Get request body
+	if err := ctx.Bind(apiBody); err != nil {
+		return ctx.JSON(http.StatusBadRequest, err)
+	}
+
+	// Convert request body to table model
+	conversionBind()
+
+	// Update DB
+	result := dbc.Save(tableModel)
+	if result.Error != nil {
+		return ctx.JSON(http.StatusInternalServerError, result.Error)
+	}
+
+	// Return response
+	return ctx.JSON(http.StatusOK, apiBody)
+}
+
 // Generic Delete Entity
 func DeleteGeneric(ctx echo.Context, tableModel interface{}, id int) error {
 	// Delete from DB

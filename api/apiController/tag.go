@@ -30,6 +30,7 @@ func (a ApiController) GetTagList(ctx echo.Context) error {
 
 	for _, tagT := range tagListT {
 		tagB := apiInterface.Tag{
+			Id:   int(tagT.ID),
 			Name: tagT.Name,
 		}
 		tagListB = append(tagListB, tagB)
@@ -39,7 +40,15 @@ func (a ApiController) GetTagList(ctx echo.Context) error {
 }
 
 func (a ApiController) UpdateTag(ctx echo.Context) error {
-	return ctx.JSON(http.StatusMethodNotAllowed, "Method Not Allowed")
+	tagB := apiInterface.Tag{}
+	tagT := db.Tag{}
+
+	conversionBind := func() {
+		tagT.ID = uint(tagB.Id)
+		tagT.Name = tagB.Name
+	}
+
+	return UpdateGeneric(ctx, &tagB, &tagT, conversionBind)
 }
 
 func (a ApiController) DeleteTag(ctx echo.Context, id int) error {

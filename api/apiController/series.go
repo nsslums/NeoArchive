@@ -38,6 +38,7 @@ func (a ApiController) GetSeriesList(ctx echo.Context, params apiInterface.GetSe
 
 	for _, seriesT := range seriesListT {
 		seriesB := apiInterface.Series{
+			Id:    int(seriesT.ID),
 			Title: seriesT.Title,
 		}
 		seriesListB = append(seriesListB, seriesB)
@@ -47,7 +48,15 @@ func (a ApiController) GetSeriesList(ctx echo.Context, params apiInterface.GetSe
 }
 
 func (a ApiController) UpdateSeries(ctx echo.Context) error {
-	return ctx.JSON(http.StatusMethodNotAllowed, "Method Not Allowed")
+	seriesB := apiInterface.Series{}
+	seriesT := db.Series{}
+
+	conversionBind := func() {
+		seriesT.ID = uint(seriesB.Id)
+		seriesT.Title = seriesB.Title
+	}
+
+	return UpdateGeneric(ctx, &seriesB, &seriesT, conversionBind)
 }
 
 func (a ApiController) DeleteSeries(ctx echo.Context, id int) error {
