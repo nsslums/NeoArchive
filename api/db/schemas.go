@@ -45,7 +45,7 @@ type Video struct {
 	gorm.Model
 	ID            uint `gorm:"primaryKey,autoIncrement"`
 	BroadcastTime time.Time
-	PlaybackTime  time.Time
+	PlaybackTime  uint
 }
 
 type VideoLog struct {
@@ -53,5 +53,5 @@ type VideoLog struct {
 	ID           uint `gorm:"primaryKey,autoIncrement"`
 	VideoID      uint
 	PlaybackTime time.Time
-	Video        Video
+	Video        Video `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:CASCADE;"`
 }

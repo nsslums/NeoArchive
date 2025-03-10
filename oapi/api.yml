@@ -2,6 +2,9 @@ openapi: '3.0.3'
 info:
   title: Hachimitu API
   version: '0.1.1'
+servers:
+  - url: http://localhost:1323
+    description: Development server
 
 paths:
   /series_list:
@@ -646,13 +649,16 @@ components:
           type: integer
           title: Video ID
         broadcast_time:
-          type: integer
+          type: string
+          format: date-time
           title: Broadcast time
         playback_time:
           type: integer
           title: Playback time
       required:
         - id
+        - broadcast_time
+        - playback_time
 
     VideoLog:
       type: object
