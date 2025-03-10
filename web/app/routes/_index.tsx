@@ -1,4 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
+import { FaClockRotateLeft } from "react-icons/fa6";
+import { PiArrowsClockwiseBold } from "react-icons/pi";
 import { AnimeCard } from "~/components/animeCard";
 import Player from "~/components/player";
 import { Button } from "~/components/ui/button";
@@ -13,10 +15,41 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <div>
-      <Button>Click Me</Button>
-      <AnimeCard Title="test" Description="test" />
-      <div className="w-3/4">
-        <Player src= "https://devstreaming-cdn.apple.com/videos/streaming/examples/adv_dv_atmos/main.m3u8" />
+      <div>
+        <p className="text-lg ml-4 flex gap-2 items-center">
+          <PiArrowsClockwiseBold />
+          更新されたアニメ
+        </p>
+        <div className="flex flex-wrap w-full gap-x-4 gap-y-6 justify-center my-4">
+          <AnimeCard Title="test" Description="test" href="/play/1" />
+          <AnimeCard Title="test" Description="test" href="/play/1" />
+          <AnimeCard Title="test" Description="test" href="/play/1" />
+          <AnimeCard Title="test" Description="test" href="/play/1" />
+          <AnimeCard Title="test" Description="test" href="/play/1" />
+          <AnimeCard Title="test" Description="test" href="/play/1" />
+          <AnimeCard Title="test" Description="test" href="/play/1" />
+          <AnimeCard Title="test" Description="test" href="/play/1" />
+          <AnimeCard Title="test" Description="test" href="/play/1" />
+          <AnimeCard Title="test" Description="test" href="/play/1" />
+        </div>
+      </div>
+      <div>
+        <p className="text-lg ml-4 mt-8 flex gap-2 items-center">
+          <FaClockRotateLeft />
+          履歴
+        </p>
+        <div className="flex flex-wrap w-full gap-x-4 gap-y-6 justify-center my-4">
+          <AnimeCard Title="test" Description="test" href="/season/1"/>
+          <AnimeCard Title="test" Description="test" href="/season/1"/>
+          <AnimeCard Title="test" Description="test" href="/season/1"/>
+          <AnimeCard Title="test" Description="test" href="/season/1"/>
+          <AnimeCard Title="test" Description="test" href="/season/1"/>
+          <AnimeCard Title="test" Description="test" href="/season/1"/>
+          <AnimeCard Title="test" Description="test" href="/season/1"/>
+          <AnimeCard Title="test" Description="test" href="/season/1"/>
+          <AnimeCard Title="test" Description="test" href="/season/1"/>
+          <AnimeCard Title="test" Description="test" href="/season/1"/>
+        </div>
       </div>
     </div>
   );

@@ -19,22 +19,18 @@ import {
 
 const data: { title: string; href: string }[] = [
   {
-    title: "Page 1",
+    title: "Season 1",
     href: "/season/1",
   },
   {
-    title: "Page 2",
-    href: "/season/2",
-  },
-  {
-    title: "Page 3",
-    href: "/season/3",
+    title: "Play 1",
+    href: "/play/1",
   },
 ];
 
 export const Header = () => {
   return (
-    <header>
+    <header className=" sticky top-0 z-50 bg-white">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>

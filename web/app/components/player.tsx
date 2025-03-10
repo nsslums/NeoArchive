@@ -35,9 +35,10 @@ interface Qualitiy {
 
 type PropsType = {
   src: string;
+  className?: string;
 };
 
-export default function Player({ src }: PropsType) {
+export default function Player({ src, className }: PropsType) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRoot = useRef(null);
   const hideControlsTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -90,7 +91,8 @@ export default function Player({ src }: PropsType) {
       hls.on(Hls.Events.LEVEL_SWITCHED, (_, data) => {
         console.log(`🎥 HLS Level Switched: ${data.level}`);
         console.log(
-          `🔍 Current Resolution: ${hls?.levels[data.level]?.height}p / ${hls?.levels[data.level]?.codecs
+          `🔍 Current Resolution: ${hls?.levels[data.level]?.height}p / ${
+            hls?.levels[data.level]?.codecs
           }`
         );
         console.log(`📶 Bitrate: ${hls?.levels[data.level]?.bitrate}bps`);
@@ -105,13 +107,11 @@ export default function Player({ src }: PropsType) {
           }))
         )
         .catch(() => {
-
           setPlayerStatus((preState) => ({
             ...preState,
             isPlay: false,
-          }))
-        }
-        );
+          }));
+        });
 
       hls.subtitleDisplay = playerStatus.showSubtitle;
     } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
@@ -149,6 +149,16 @@ export default function Player({ src }: PropsType) {
       }
     };
 
+    const toggleSubtitleKey = () => {
+      if (!hls) return;
+      if (hls.allSubtitleTracks.length === 0) return;
+      hls.subtitleDisplay = !hls.subtitleDisplay;
+      setPlayerStatus((preState) => ({
+        ...preState,
+        showSubtitle: hls.subtitleDisplay,
+      }));
+    };
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!video) return;
       switch (e.key) {
@@ -180,6 +190,10 @@ export default function Player({ src }: PropsType) {
           e.preventDefault();
           handleFullScreen();
           break;
+        case "c":
+          e.preventDefault();
+          toggleSubtitleKey();
+          break;
       }
     };
 
@@ -190,11 +204,26 @@ export default function Player({ src }: PropsType) {
       }));
     };
 
+    const fullScreenChange = () => {
+      if (document.fullscreenElement) {
+        setPlayerStatus((preState) => ({
+          ...preState,
+          isFullScreen: true,
+        }));
+      } else {
+        setPlayerStatus((preState) => ({
+          ...preState,
+          isFullScreen: false,
+        }));
+      }
+    };
+
     video.addEventListener("timeupdate", updateTime);
     video.addEventListener("loadedmetadata", setVideoDuration);
     video.addEventListener("progress", updateBuffered);
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("leavepictureinpicture", onExitPip);
+    document.addEventListener("fullscreenchange", fullScreenChange);
 
     setHlsInstance(hls);
 
@@ -204,6 +233,7 @@ export default function Player({ src }: PropsType) {
       video.removeEventListener("loadedmetadata", setVideoDuration);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("leavepictureinpicture", onExitPip);
+      document.removeEventListener("fullscreenchange", fullScreenChange);
 
       if (hls) {
         hls.destroy();
@@ -233,17 +263,21 @@ export default function Player({ src }: PropsType) {
     if (!video) return;
 
     if (video.paused) {
-      video.play().then(() =>
-        setPlayerStatus((preState) => ({
-          ...preState,
-          isPlay: true,
-        }))).catch((e) => console.log(e));
+      video
+        .play()
+        .then(() =>
+          setPlayerStatus((preState) => ({
+            ...preState,
+            isPlay: true,
+          }))
+        )
+        .catch((e) => console.log(e));
     } else {
       video.pause();
       setPlayerStatus((preState) => ({
         ...preState,
         isPlay: false,
-      }))
+      }));
     }
     showControlsTemporarily();
   };
@@ -369,188 +403,226 @@ export default function Player({ src }: PropsType) {
   };
 
   return (
-    <div
-      className={`relative text-white bg-black ${playerStatus.showController ? "" : "cursor-none"
-        }`}
-      ref={playerRoot}
-      onMouseEnter={() =>
-        setPlayerStatus((preState) => ({
-          ...preState,
-          showController: true,
-        }))
-      }
-      onMouseMove={showControlsTemporarily}
-      onMouseLeave={() =>
-        setPlayerStatus((preState) => ({
-          ...preState,
-          showController: false,
-        }))
-      }
-      tabIndex={0}
-    >
+    <div className={className}>
       <div
-        className="relative z-0"
-        onClick={() => {
-          togglePlay();
-        }}
-      >
-        <video ref={videoRef} width="100%" />
-      </div>
-      {playerStatus.showSettings ? <div className="absolute top-0 left-0 w-full h-full" onClick={toggleSettings} /> : null}
-      <div
-        className={`w-full absolute bottom-0 text-xs z-10 ${playerStatus.showController
-          ? "opacity-100"
-          : "opacity-0 pointer-events-none"
-          } duration-200`}
+        className={`relative w-full text-white bg-black overflow-hidden ${
+          playerStatus.showController ? "" : "cursor-none"
+        } ${playerStatus.isFullScreen ? "rounded-none" : "rounded-xl"}`}
+        ref={playerRoot}
+        onMouseEnter={() =>
+          setPlayerStatus((preState) => ({
+            ...preState,
+            showController: true,
+          }))
+        }
+        onMouseMove={showControlsTemporarily}
+        onMouseLeave={() =>
+          setPlayerStatus((preState) => ({
+            ...preState,
+            showController: false,
+          }))
+        }
+        tabIndex={0}
       >
         <div
-          className={`px-4 mb-1 duration-200 absolute right-0 bottom-[45px] ${playerStatus.showSettings
-            ? "opacity-100"
-            : "opacity-0 pointer-events-none"
-            }`}
+          className="relative z-0 w-full"
+          onClick={() => {
+            togglePlay();
+          }}
         >
-          <ul className="h-40 overflow-y-scroll inline-block bg-black rounded-lg p-1 text-sm">
-            {qualities.map((q) => (
-              <li
-                key={q.level}
-                value={q.level}
-                onClick={() => handleChangeLevel(q.level)}
-                className={`cursor-pointer my-1 hover:bg-gray-200 rounded-sm ${selectedQuality === q.level ? "bg-blue-500" : ""
-                  }`}
-              >
-                {q.name} / {q.codec}
-              </li>
-            ))}
-          </ul>
+          <video ref={videoRef} width="100%" className="aspect-video" />
         </div>
-        <div className="backdrop-blur-sm px-4 pb-3">
-          <div className="w-full h-4 relative">
-            <span className="bg-gray-500 h-1 block w-full absolute top-0 rounded-sm"></span>
-            <span
-              className="bg-gray-300 h-1 block absolute top-0 rounded-sm w-full"
-              style={{
-                width: `${(playerStatus.load / playerStatus.duration) * 100}%`,
-              }}
-            ></span>
-            <span
-              className="bg-red-300 h-1 block absolute top-0 rounded-sm w-full z-10"
-              style={{
-                width: `${(playerStatus.seek / playerStatus.duration) * 100}%`,
-              }}
-            ></span>
-            <input
-              type="range"
-              min={0}
-              max={playerStatus.duration || 0}
-              step={0.1}
-              value={playerStatus.seek || 0}
-              onChange={handleSeek}
-              disabled={playerStatus.duration == 0}
-              className="h-1 block absolute top-0 rounded-sm w-full opacity-0 z-20 cursor-pointer"
-            />
+        {playerStatus.showSettings ? (
+          <div
+            className="absolute top-0 left-0 w-full h-full"
+            onClick={toggleSettings}
+          />
+        ) : null}
+        <div
+          className={`w-full absolute bottom-0 text-xs z-10 ${
+            playerStatus.showController
+              ? "opacity-100"
+              : "opacity-0 pointer-events-none"
+          } duration-200`}
+        >
+          <div
+            className={`px-4 mb-1 duration-200 absolute right-0 bottom-[45px] ${
+              playerStatus.showSettings
+                ? "opacity-100"
+                : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <ul className="h-40 overflow-y-scroll inline-block bg-black rounded-lg p-1 text-sm">
+              {qualities.map((q) => (
+                <li
+                  key={q.level}
+                  value={q.level}
+                  onClick={() => handleChangeLevel(q.level)}
+                  className={`cursor-pointer my-1 hover:bg-gray-200 rounded-sm ${
+                    selectedQuality === q.level ? "bg-blue-500" : ""
+                  }`}
+                >
+                  {q.name} / {q.codec}
+                </li>
+              ))}
+            </ul>
           </div>
-
-          <div className="flex justify-between">
-            <div className="flex gap-2 items-center">
-              <button
-                onClick={() => {
-                  togglePlay();
+          <div className="backdrop-blur-sm px-4 pb-3">
+            <div className="w-full h-4 relative">
+              <span className="bg-gray-500 h-1 block w-full absolute top-0 rounded-sm"></span>
+              <span
+                className="bg-gray-300 h-1 block absolute top-0 rounded-sm w-full"
+                style={{
+                  width: `${
+                    (playerStatus.load / playerStatus.duration) * 100
+                  }%`,
                 }}
-              >
-                {playerStatus.isPlay ? <FaPause size={18} /> : <FaPlay size={18} />}
-              </button>
-              <div
-                className="flex gap-2 items-center"
-                onMouseEnter={() =>
-                  setPlayerStatus((preState) => ({
-                    ...preState,
-                    showAudioDes: true,
-                  }))
-                }
-                onMouseLeave={() =>
-                  setPlayerStatus((preState) => ({
-                    ...preState,
-                    showAudioDes: false,
-                  }))
-                }
-              >
-                <button onClick={toggleMute}>
-                  {playerStatus.isMuted ? <FaVolumeXmark size={18} /> : <FaVolumeLow size={18} />}
+              ></span>
+              <span
+                className="bg-red-300 h-1 block absolute top-0 rounded-sm w-full z-10"
+                style={{
+                  width: `${
+                    (playerStatus.seek / playerStatus.duration) * 100
+                  }%`,
+                }}
+              ></span>
+              <span
+                className="bg-red-300 size-3 rounded-full block absolute -top-1 left-0 z-10"
+                style={{
+                  left: `${
+                    (playerStatus.seek / playerStatus.duration) * 100 - 0.5
+                  }%`,
+                }}
+              ></span>
+              <input
+                type="range"
+                min={0}
+                max={playerStatus.duration || 0}
+                step={0.1}
+                value={playerStatus.seek || 0}
+                onChange={handleSeek}
+                disabled={playerStatus.duration == 0}
+                className="h-1 block absolute top-0 rounded-sm w-full opacity-0 z-20 cursor-pointer"
+              />
+            </div>
+
+            <div className="flex justify-between">
+              <div className="flex gap-3 items-center">
+                <button
+                  onClick={() => {
+                    togglePlay();
+                  }}
+                >
+                  {playerStatus.isPlay ? (
+                    <FaPause size={18} />
+                  ) : (
+                    <FaPlay size={18} />
+                  )}
                 </button>
                 <div
-                  className={`relative duration-200 h-4 ${playerStatus.showAudioDes ? "w-20" : "w-0"
-                    }`}
+                  className="flex gap-2 items-center"
+                  onMouseEnter={() =>
+                    setPlayerStatus((preState) => ({
+                      ...preState,
+                      showAudioDes: true,
+                    }))
+                  }
+                  onMouseLeave={() =>
+                    setPlayerStatus((preState) => ({
+                      ...preState,
+                      showAudioDes: false,
+                    }))
+                  }
                 >
-                  <span className="bg-gray-300 h-1 block absolute top-1/2 -translate-y-1/2 left-0 rounded-sm w-full"></span>
-                  <span
-                    className="bg-red-300 h-1 block absolute top-1/2 -translate-y-1/2 left-0 rounded-sm w-1/2 z-10"
-                    style={{
-                      width: `${playerStatus.volume * 100}%`,
-                    }}
-                  ></span>
-                  <input
-                    type="range"
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    value={playerStatus.volume}
-                    onChange={(e) => {
-                      handleVolumeChange(parseFloat(e.target.value));
-                    }}
-                    className="opacity-0 absolute h-1 w-full top-1/2 -translate-y-1/2 left-0 z-20 cursor-pointer"
-                  />
+                  <button onClick={toggleMute}>
+                    {playerStatus.isMuted ? (
+                      <FaVolumeXmark size={18} />
+                    ) : (
+                      <FaVolumeLow size={18} />
+                    )}
+                  </button>
+                  <div
+                    className={`relative duration-200 h-4 overflow-hidden ${
+                      playerStatus.showAudioDes ? "w-20" : "w-0"
+                    }`}
+                  >
+                    <span className="bg-gray-300 h-1 block absolute top-1/2 -translate-y-1/2 left-0 rounded-sm w-full"></span>
+                    <span
+                      className="bg-red-300 h-1 block absolute top-1/2 -translate-y-1/2 left-0 rounded-sm w-1/2 z-10"
+                      style={{
+                        width: `${playerStatus.volume * 100}%`,
+                      }}
+                    ></span>
+                    <span
+                      className="bg-red-300 size-2 rounded-full block absolute top-1/2 -translate-y-1/2 left-0 z-10"
+                      style={{
+                        left: `${playerStatus.volume * 100 - 2.5}%`,
+                      }}
+                    ></span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={playerStatus.volume}
+                      onChange={(e) => {
+                        handleVolumeChange(parseFloat(e.target.value));
+                      }}
+                      className="opacity-0 absolute h-1 w-full top-1/2 -translate-y-1/2 left-0 z-20 cursor-pointer"
+                    />
+                  </div>
+                </div>
+                <div>
+                  {formatTime(playerStatus.seek)}
+                  {" / "}
+                  {formatTime(playerStatus.duration)}
                 </div>
               </div>
-              <div>
-                {formatTime(playerStatus.seek)}
-                {" / "}
-                {formatTime(playerStatus.duration)}
+              <div className="flex gap-3 items-center">
+                <button onClick={toggleSubtitle}>
+                  {playerStatus.showSubtitle ? (
+                    <MdOutlineSubtitles size={18} />
+                  ) : (
+                    <MdOutlineSubtitlesOff size={18} />
+                  )}
+                </button>
+                <button onClick={toggleSettings}>
+                  <RiSettings3Fill size={18} />
+                </button>
+                <button onClick={handlePip}>
+                  {playerStatus.isPip ? (
+                    <PiPictureInPictureFill size={18} />
+                  ) : (
+                    <PiPictureInPicture size={18} />
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    move(-10);
+                  }}
+                >
+                  <IoReturnDownBack size={18} />
+                </button>
+                <button
+                  onClick={() => {
+                    move(10);
+                  }}
+                  className="rotate-180"
+                >
+                  <IoReturnDownBack size={18} />
+                </button>
+                <button
+                  onClick={() => {
+                    handleFullScreen();
+                  }}
+                >
+                  {playerStatus.isFullScreen ? (
+                    <RiFullscreenExitLine size={18} />
+                  ) : (
+                    <RiFullscreenFill size={18} />
+                  )}
+                </button>
               </div>
-            </div>
-            <div className="flex gap-2 items-center">
-              <button onClick={toggleSubtitle}>
-                {playerStatus.showSubtitle ? (
-                  <MdOutlineSubtitles size={18} />
-                ) : (
-                  <MdOutlineSubtitlesOff size={18} />
-                )}
-              </button>
-              <button onClick={toggleSettings}>
-                <RiSettings3Fill size={18} />
-              </button>
-              <button onClick={handlePip}>
-                {playerStatus.isPip ? (
-                  <PiPictureInPictureFill size={18} />
-                ) : (
-                  <PiPictureInPicture size={18} />
-                )}
-              </button>
-              <button
-                onClick={() => {
-                  move(-10);
-                }}
-              >
-                <IoReturnDownBack size={18} />
-              </button>
-              <button
-                onClick={() => {
-                  move(10);
-                }}
-                className="rotate-180"
-              >
-                <IoReturnDownBack size={18} />
-              </button>
-              <button
-                onClick={() => {
-                  handleFullScreen();
-                }}
-              >
-                {playerStatus.isFullScreen ? (
-                  <RiFullscreenExitLine size={18} />
-                ) : (
-                  <RiFullscreenFill size={18} />
-                )}
-              </button>
             </div>
           </div>
         </div>
