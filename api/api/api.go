@@ -20,16 +20,21 @@ func init() {
 	// Create API Server
 	e = echo.New()
 
+	// LoggerとRecoverミドルウェアを追加
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	// CORSミドルウェアを追加
+	// CORSミドルウェアはHTTP関連ミドルウェアやハンドラの前に追加する必要がある
+	// Dev only, should be removed in production
+	e.Use(middleware.CORS())
+
 	// OpenAPIの仕様に沿っているかリクエストをバリデーションするミドルウェアを作成&追加
 	swagger, err := apiInterface.GetSwagger()
 	if err != nil {
 		panic(err)
 	}
 	e.Use(echomiddleware.OapiRequestValidator(swagger))
-
-	// LoggerとRecoverミドルウェアを追加
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
 
 	api := apiController.ApiController{}
 	apiInterface.RegisterHandlers(e, api)
