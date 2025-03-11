@@ -2,18 +2,14 @@
 
 自宅サーバー向け、アニメや配信の録画保存に最適な総合メディアサーバー  
 
-## 構成
-
-本プロジェクトNeoArchiveは、メディアの保存と再生機能のみを有します。
-
-### 本プロジェクトと関連プロジェクト
+## 本プロジェクトと関連プロジェクト
 - NeoArchive(本プロジェクト): 保存・再生
 - ts-recoding-sets(近日公開予定): TS・BS/CSの録画・エンコード
 - encoding-control-server: job-queueコントローラー(エンコードに使用)
 
-## 注意事項
+## バージョンとリリース
 
-本プロジェクトを使用して、第三者が作成したコンテンツを扱う場合は、所管国の著作権法に従ってください。
+本プロジェクトは現在開発中です。
 
 # 開発環境
 
@@ -37,6 +33,12 @@
     1. Swagger UIを開く
     ![Swagger UIを開く](./docs/img/スクリーンショット%202025-02-23%20233003.png)
 
-# License
+# 本プロジェクトに関して
+
+## 注意事項
+
+本プロジェクトを使用して、第三者が作成したコンテンツを扱う場合は、所管国の著作権法に従ってください。
+
+## License
 
 This project is licensed under the **GNU Affero General Public License v3.0** - see the [LICENSE](./LICENSE) file for details.
