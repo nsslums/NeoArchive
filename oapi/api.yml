@@ -37,6 +37,31 @@ paths:
                 $ref: '#/components/schemas/DefaultErrorResponse'
 
   /series/{id}:
+    get:
+      summary: Get series
+      tags:
+        - Series
+      operationId: GetSeries
+      parameters:
+        - name: id
+          in: path
+          description: Series ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
     delete:
       summary: Delete series
       tags:
@@ -231,6 +256,31 @@ paths:
                 $ref: '#/components/schemas/DefaultErrorResponse'
 
   /anime/season/{id}:
+    get:
+      summary: Get anime season
+      tags:
+        - Anime season
+      operationId: GetAnimeSeason
+      parameters:
+        - name: id
+          in: path
+          description: Season ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimeSeason'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
     delete:
       summary: Delete anime season
       tags:
@@ -451,6 +501,31 @@ paths:
                 $ref: '#/components/schemas/DefaultErrorResponse'
 
   /anime/episode/{id}:
+    get:
+      summary: Get anime episode
+      tags:
+        - Anime episode
+      operationId: GetAnimeEpisode
+      parameters:
+        - name: id
+          in: path
+          description: Episode ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimeEpisode'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
     delete:
       summary: Delete anime episode
       tags:
