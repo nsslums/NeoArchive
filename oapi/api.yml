@@ -37,6 +37,31 @@ paths:
                 $ref: '#/components/schemas/DefaultErrorResponse'
 
   /series/{id}:
+    get:
+      summary: Get series
+      tags:
+        - Series
+      operationId: GetSeries
+      parameters:
+        - name: id
+          in: path
+          description: Series ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
     delete:
       summary: Delete series
       tags:
@@ -231,6 +256,31 @@ paths:
                 $ref: '#/components/schemas/DefaultErrorResponse'
 
   /anime/season/{id}:
+    get:
+      summary: Get anime season
+      tags:
+        - Anime season
+      operationId: GetAnimeSeason
+      parameters:
+        - name: id
+          in: path
+          description: Season ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimeSeason'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
     delete:
       summary: Delete anime season
       tags:
@@ -302,6 +352,125 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultErrorResponse'
 
+  /cast_list:
+    get:
+      summary: Get cast list
+      tags:
+        - Cast
+      operationId: GetCastList
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cast'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+  /cast/{id}:
+    get:
+      summary: Get cast
+      tags:
+        - Cast
+      operationId: GetCast
+      parameters:
+        - name: id
+          in: path
+          description: Cast ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cast'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+    delete:
+      summary: Delete cast
+      tags:
+        - Cast
+      operationId: DeleteCast
+      parameters:
+        - name: id
+          in: path
+          description: Cast ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+
+  /cast:
+    post:
+      summary: Create cast
+      tags:
+        - Cast
+      operationId: CreateCast
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cast'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cast'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+    put:
+      summary: Update cast
+      tags:
+        - Cast
+      operationId: UpdateCast
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cast'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cast'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+
   /anime/episode_list/{season_id}:
     get:
       summary: Get anime episode list
@@ -332,6 +501,31 @@ paths:
                 $ref: '#/components/schemas/DefaultErrorResponse'
 
   /anime/episode/{id}:
+    get:
+      summary: Get anime episode
+      tags:
+        - Anime episode
+      operationId: GetAnimeEpisode
+      parameters:
+        - name: id
+          in: path
+          description: Episode ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimeEpisode'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
     delete:
       summary: Delete anime episode
       tags:
@@ -607,9 +801,11 @@ components:
           title: cours
           description: クール(秋アニメ,冬アニメ,春アニメ,夏アニメ)
         casts:
-          type: string
+          type: array
           title: casts
           description: 出演者
+          items:
+            $ref: '#/components/schemas/Cast'
         production:
           type: string
           title: production
@@ -618,6 +814,19 @@ components:
         - id
         - series_id
         - title
+
+    Cast:
+      type: object
+      properties:
+        id:
+          type: integer
+          title: Cast ID
+        name:
+          type: string
+          title: Cast name
+      required:
+        - id
+        - name
 
     AnimeEpisode:
       type: object
