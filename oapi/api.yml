@@ -302,6 +302,125 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultErrorResponse'
 
+  /cast_list:
+    get:
+      summary: Get cast list
+      tags:
+        - Cast
+      operationId: GetCastList
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cast'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+  /cast/{id}:
+    get:
+      summary: Get cast
+      tags:
+        - Cast
+      operationId: GetCast
+      parameters:
+        - name: id
+          in: path
+          description: Cast ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cast'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+    delete:
+      summary: Delete cast
+      tags:
+        - Cast
+      operationId: DeleteCast
+      parameters:
+        - name: id
+          in: path
+          description: Cast ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+
+  /cast:
+    post:
+      summary: Create cast
+      tags:
+        - Cast
+      operationId: CreateCast
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cast'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cast'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+    put:
+      summary: Update cast
+      tags:
+        - Cast
+      operationId: UpdateCast
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cast'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cast'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+
   /anime/episode_list/{season_id}:
     get:
       summary: Get anime episode list
