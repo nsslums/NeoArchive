@@ -607,9 +607,11 @@ components:
           title: cours
           description: クール(秋アニメ,冬アニメ,春アニメ,夏アニメ)
         casts:
-          type: string
+          type: array
           title: casts
           description: 出演者
+          items:
+            $ref: '#/components/schemas/Cast'
         production:
           type: string
           title: production
@@ -618,6 +620,19 @@ components:
         - id
         - series_id
         - title
+
+    Cast:
+      type: object
+      properties:
+        id:
+          type: integer
+          title: Cast ID
+        name:
+          type: string
+          title: Cast name
+      required:
+        - id
+        - name
 
     AnimeEpisode:
       type: object
