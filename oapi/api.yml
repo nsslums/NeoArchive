@@ -899,9 +899,9 @@ components:
           type: string
           format: date-time
           title: Broadcast time
-        playback_time:
+        length:
           type: integer
-          title: Playback time
+          title: Video length
       required:
         - broadcast_time
         - playback_time
