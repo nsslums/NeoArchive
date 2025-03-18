@@ -800,6 +800,11 @@ components:
         series_id:
           type: integer
           title: Series ID
+        casts_id:
+          type: array
+          title: casts_id
+          items:
+            type: integer
         display_number:
           type: integer
           title: Display number
@@ -839,9 +844,6 @@ components:
         name:
           type: string
           title: Cast name
-        anime_season_id:
-          type: integer
-          title: AnimeSeason ID
       required:
         - name
         - anime_season_id
