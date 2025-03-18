@@ -94,14 +94,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Series'
+              $ref: '#/components/schemas/SeriesBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Series'
+                $ref: '#/components/schemas/SeriesBase'
         default:
           description: Error
           content:
@@ -187,14 +187,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Tag'
+              $ref: '#/components/schemas/TagBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tag'
+                $ref: '#/components/schemas/TagBase'
         default:
           description: Error
           content:
@@ -313,14 +313,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AnimeSeason'
+              $ref: '#/components/schemas/AnimeSeasonBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AnimeSeason'
+                $ref: '#/components/schemas/AnimeSeasonBase'
         default:
           description: Error
           content:
@@ -558,14 +558,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AnimeEpisode'
+              $ref: '#/components/schemas/AnimeEpisodeBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AnimeEpisode'
+                $ref: '#/components/schemas/AnimeEpisodeBase'
         default:
           description: Error
           content:
@@ -656,14 +656,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Video'
+              $ref: '#/components/schemas/VideoBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Video'
+                $ref: '#/components/schemas/VideoBase'
         default:
           description: Error
           content:
@@ -732,14 +732,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VideoLog'
+              $ref: '#/components/schemas/VideoLogBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VideoLog'
+                $ref: '#/components/schemas/VideoLogBase'
         default:
           description: Error
           content:
@@ -749,43 +749,54 @@ paths:
 
 components:
   schemas:
-    Series:
+    SeriesBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Series ID
         title:
           type: string
           title: title
-        tags:
+        tags_id:
           type: array
-          title: tags
+          title: tags_id
           items:
-            $ref: '#/components/schemas/Tag'
+            type: integer
       required:
-        - id
         - title
+        
+    Series:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/SeriesBase'
+        - properties:
+            id:
+              type: integer
+              title: Series ID
+          required:
+            - id
 
-    Tag:
+    TagBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Tag ID
         name:
           type: string
           title: Tag name
       required:
-        - id
         - name
+    
+    Tag:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/TagBase'
+        - properties:
+            id:
+              type: integer
+              title: Tag ID
+          required:
+            - id
 
-    AnimeSeason:
+    AnimeSeasonBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Season ID
         series_id:
           type: integer
           title: Series ID
@@ -800,40 +811,52 @@ components:
           type: string
           title: cours
           description: クール(秋アニメ,冬アニメ,春アニメ,夏アニメ)
-        casts:
-          type: array
-          title: casts
-          description: 出演者
-          items:
-            $ref: '#/components/schemas/Cast'
         production:
           type: string
           title: production
           description: 制作会社
       required:
-        - id
         - series_id
         - title
+    
+    AnimeSeason:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AnimeSeasonBase'
+        - properties:
+            id:
+              type: integer
+              title: Season ID
+          required:
+            - id
 
-    Cast:
+    CastBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Cast ID
         name:
           type: string
           title: Cast name
+        anime_season_id:
+          type: integer
+          title: AnimeSeason ID
       required:
-        - id
         - name
+        - anime_season_id
+    
+    Cast:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/CastBase'
+        - properties:
+            id:
+              type: integer
+              title: Cast ID
+          required:
+            - id
 
-    AnimeEpisode:
+    AnimeEpisodeBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Episode ID
         season_id:
           type: integer
           title: Season ID
@@ -847,16 +870,23 @@ components:
           type: string
           title: Episode subtitle
       required:
-        - id
         - season_id
         - video_id
+    
+    AnimeEpisode:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AnimeEpisodeBase'
+        - properties:
+            id:
+              type: integer
+              title: Episode ID
+          required:
+            - id
 
-    Video:
+    VideoBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Video ID
         broadcast_time:
           type: string
           format: date-time
@@ -865,16 +895,23 @@ components:
           type: integer
           title: Playback time
       required:
-        - id
         - broadcast_time
         - playback_time
+    
+    Video:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/VideoBase'
+        - properties:
+            id:
+              type: integer
+              title: Video ID
+          required:
+            - id
 
-    VideoLog:
+    VideoLogBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Video log ID
         video_id:
           type: integer
           title: Video ID
@@ -885,10 +922,20 @@ components:
           type: integer
           title: Playback time
       required:
-        - id
         - video_id
         - user_id
         - playback_time
+
+    VideoLog:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/VideoLogBase'
+        - properties:
+            id:
+              type: integer
+              title: Video log ID
+          required:
+            - id
 
     DefaultErrorResponse:
       type: object
