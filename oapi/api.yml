@@ -800,6 +800,9 @@ components:
         series_id:
           type: integer
           title: Series ID
+        display_number:
+          type: integer
+          title: Display number
         title:
           type: string
           title: title
@@ -863,6 +866,9 @@ components:
         video_id:
           type: integer
           title: Video ID
+        display_number:
+          type: integer
+          title: Display number
         number:
           type: string
           title: Episode number
