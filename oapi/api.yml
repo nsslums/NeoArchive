@@ -923,15 +923,11 @@ components:
         video_id:
           type: integer
           title: Video ID
-        user_id:
-          type: integer
-          title: User ID
         playback_time:
           type: integer
           title: Playback time
       required:
         - video_id
-        - user_id
         - playback_time
 
     VideoLog:
