@@ -2,6 +2,9 @@ openapi: '3.0.3'
 info:
   title: Hachimitu API
   version: '0.1.1'
+servers:
+  - url: http://localhost:1323
+    description: Development server
 
 paths:
   /series_list:
@@ -34,6 +37,31 @@ paths:
                 $ref: '#/components/schemas/DefaultErrorResponse'
 
   /series/{id}:
+    get:
+      summary: Get series
+      tags:
+        - Series
+      operationId: GetSeries
+      parameters:
+        - name: id
+          in: path
+          description: Series ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
     delete:
       summary: Delete series
       tags:
@@ -66,14 +94,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Series'
+              $ref: '#/components/schemas/SeriesBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Series'
+                $ref: '#/components/schemas/SeriesBase'
         default:
           description: Error
           content:
@@ -159,14 +187,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Tag'
+              $ref: '#/components/schemas/TagBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tag'
+                $ref: '#/components/schemas/TagBase'
         default:
           description: Error
           content:
@@ -228,6 +256,31 @@ paths:
                 $ref: '#/components/schemas/DefaultErrorResponse'
 
   /anime/season/{id}:
+    get:
+      summary: Get anime season
+      tags:
+        - Anime season
+      operationId: GetAnimeSeason
+      parameters:
+        - name: id
+          in: path
+          description: Season ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimeSeason'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
     delete:
       summary: Delete anime season
       tags:
@@ -260,14 +313,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AnimeSeason'
+              $ref: '#/components/schemas/AnimeSeasonBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AnimeSeason'
+                $ref: '#/components/schemas/AnimeSeasonBase'
         default:
           description: Error
           content:
@@ -292,6 +345,125 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnimeSeason'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+
+  /cast_list:
+    get:
+      summary: Get cast list
+      tags:
+        - Cast
+      operationId: GetCastList
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cast'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+  /cast/{id}:
+    get:
+      summary: Get cast
+      tags:
+        - Cast
+      operationId: GetCast
+      parameters:
+        - name: id
+          in: path
+          description: Cast ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cast'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+    delete:
+      summary: Delete cast
+      tags:
+        - Cast
+      operationId: DeleteCast
+      parameters:
+        - name: id
+          in: path
+          description: Cast ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+
+  /cast:
+    post:
+      summary: Create cast
+      tags:
+        - Cast
+      operationId: CreateCast
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cast'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cast'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+    put:
+      summary: Update cast
+      tags:
+        - Cast
+      operationId: UpdateCast
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cast'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cast'
         default:
           description: Error
           content:
@@ -329,6 +501,31 @@ paths:
                 $ref: '#/components/schemas/DefaultErrorResponse'
 
   /anime/episode/{id}:
+    get:
+      summary: Get anime episode
+      tags:
+        - Anime episode
+      operationId: GetAnimeEpisode
+      parameters:
+        - name: id
+          in: path
+          description: Episode ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnimeEpisode'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
     delete:
       summary: Delete anime episode
       tags:
@@ -361,14 +558,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AnimeEpisode'
+              $ref: '#/components/schemas/AnimeEpisodeBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AnimeEpisode'
+                $ref: '#/components/schemas/AnimeEpisodeBase'
         default:
           description: Error
           content:
@@ -459,14 +656,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Video'
+              $ref: '#/components/schemas/VideoBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Video'
+                $ref: '#/components/schemas/VideoBase'
         default:
           description: Error
           content:
@@ -535,14 +732,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VideoLog'
+              $ref: '#/components/schemas/VideoLogBase'
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VideoLog'
+                $ref: '#/components/schemas/VideoLogBase'
         default:
           description: Error
           content:
@@ -552,46 +749,65 @@ paths:
 
 components:
   schemas:
-    Series:
+    SeriesBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Series ID
         title:
           type: string
           title: title
-        tags:
+        tags_id:
           type: array
-          title: tags
+          title: tags_id
           items:
-            $ref: '#/components/schemas/Tag'
+            type: integer
       required:
-        - id
         - title
+        
+    Series:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/SeriesBase'
+        - properties:
+            id:
+              type: integer
+              title: Series ID
+          required:
+            - id
 
-    Tag:
+    TagBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Tag ID
         name:
           type: string
           title: Tag name
       required:
-        - id
         - name
+    
+    Tag:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/TagBase'
+        - properties:
+            id:
+              type: integer
+              title: Tag ID
+          required:
+            - id
 
-    AnimeSeason:
+    AnimeSeasonBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Season ID
         series_id:
           type: integer
           title: Series ID
+        casts_id:
+          type: array
+          title: casts_id
+          items:
+            type: integer
+        display_number:
+          type: integer
+          title: Display number
         title:
           type: string
           title: title
@@ -603,31 +819,58 @@ components:
           type: string
           title: cours
           description: クール(秋アニメ,冬アニメ,春アニメ,夏アニメ)
-        cast:
-          type: string
-          title: cast
-          description: 出演者
         production:
           type: string
           title: production
           description: 制作会社
       required:
-        - id
         - series_id
         - title
+    
+    AnimeSeason:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AnimeSeasonBase'
+        - properties:
+            id:
+              type: integer
+              title: Season ID
+          required:
+            - id
 
-    AnimeEpisode:
+    CastBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Episode ID
+        name:
+          type: string
+          title: Cast name
+      required:
+        - name
+        - anime_season_id
+    
+    Cast:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/CastBase'
+        - properties:
+            id:
+              type: integer
+              title: Cast ID
+          required:
+            - id
+
+    AnimeEpisodeBase:
+      type: object
+      properties:
         season_id:
           type: integer
           title: Season ID
         video_id:
           type: integer
           title: Video ID
+        display_number:
+          type: integer
+          title: Display number
         number:
           type: string
           title: Episode number
@@ -635,44 +878,68 @@ components:
           type: string
           title: Episode subtitle
       required:
-        - id
         - season_id
+        - video_id
+    
+    AnimeEpisode:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AnimeEpisodeBase'
+        - properties:
+            id:
+              type: integer
+              title: Episode ID
+          required:
+            - id
 
+    VideoBase:
+      type: object
+      properties:
+        broadcast_time:
+          type: string
+          format: date-time
+          title: Broadcast time
+        length:
+          type: integer
+          title: Video length
+      required:
+        - broadcast_time
+        - playback_time
+    
     Video:
       type: object
-      properties:
-        id:
-          type: integer
-          title: Video ID
-        broadcast_time:
-          type: integer
-          title: Broadcast time
-        playback_time:
-          type: integer
-          title: Playback time
-      required:
-        - id
+      allOf:
+        - $ref: '#/components/schemas/VideoBase'
+        - properties:
+            id:
+              type: integer
+              title: Video ID
+          required:
+            - id
 
-    VideoLog:
+    VideoLogBase:
       type: object
       properties:
-        id:
-          type: integer
-          title: Video log ID
         video_id:
           type: integer
           title: Video ID
-        user_id:
-          type: integer
-          title: User ID
         playback_time:
           type: integer
           title: Playback time
       required:
-        - id
         - video_id
-        - user_id
         - playback_time
+
+    VideoLog:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/VideoLogBase'
+        - properties:
+            id:
+              type: integer
+              title: Video log ID
+          required:
+            - id
 
     DefaultErrorResponse:
       type: object
