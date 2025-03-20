@@ -7,8 +7,8 @@ import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "IASS" },
-    { name: "description", content: "Welcome to IASS!" },
+    { title: "NeoArchive" },
+    { name: "description", content: "Welcome to NeoArchive!" },
   ];
 };
 
