@@ -23,7 +23,7 @@ export const meta: MetaFunction = () => {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,7 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <Header />
         <div className="container m-auto my-8">{children}</div>
-        <Toaster position="top-right" visibleToasts={2}/>
+        <Toaster position="top-right" visibleToasts={1}/>
         <ScrollRestoration />
         <Scripts />
       </body>

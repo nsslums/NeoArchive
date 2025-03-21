@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { data, Outlet, useLoaderData } from "@remix-run/react";
 import type { paths } from "api/schema";
 import createClient from "openapi-fetch";
 import { useState } from "react";
@@ -24,9 +24,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { Sortable } from "~/components/sort/Sortable";
-import { SortableItem } from "~/components/sort/SortableItem";
 import { SortableDrop } from "~/components/sort/SortableDrop";
-import { v4 as uuidv4 } from "uuid";
 import { SeriesAccordion } from "~/components/edit/seriesAccordion";
 import { MenuSeasonItem } from "~/components/sort/MenuSeasonItem";
 import { Card } from "~/components/ui/card";
@@ -79,11 +77,42 @@ type AnimeIndexes = {
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const client = createClient<paths>({ baseUrl: process.env.API_URL });
-  // const {data, error} = await client.GET("/anime/episode_list/{season_id}", {
-  //   params: {
-  //     path: {season_id: Number(params.id)}
-  //   }
-  // });
+  try {
+    // const { data: season } = await client.GET("/anime/season/{id}", {
+    //   params: {
+    //     path: { id: Number(params.season_id) },
+    //   },
+    // });
+    // if (!season) {
+    //   return;
+    // }
+    // const { data: series, error } = await client.GET("/series/{id}", {
+    //   params: {
+    //     path: { id: season.series_id },
+    //   },
+    // });
+    // const { data: season_list } = await client.GET(
+    //   "/anime/season_list/{series_id}",
+    //   {
+    //     params: {
+    //       path: { series_id: season.series_id },
+    //     },
+    //   }
+    // );
+    // if (!season_list) {
+    //   return;
+    // }
+    // const { data: episode_list } = await client.GET(
+    //   "/anime/episode_list/{season_id}",
+    //   {
+    //     params: {
+    //       path: { season_id: season.id },
+    //     },
+    //   }
+    // );
+  } catch (error) {
+    console.log("deta fech", error);
+  }
 
   const sampleAnimeData: AnimeDetail = {
     id: "animes",
@@ -471,7 +500,59 @@ export default function SeasonEdit() {
           collisionDetection={pointerWithin}
           id={animeData.id}
         >
-          <div className="flex flex-col gap-4 w-[400px] sticky top-0">
+          <div className="flex flex-col gap-4 w-[400px] h-[calc(100vh-(57px+62px+2px))] pb-4 sticky top-0 overflow-auto no-scrollbar">
+            {animeData.series.map((series) => (
+              <SeriesAccordion key={series.id} data={series}>
+                <SortableContext
+                  items={series.season}
+                  key={series.id}
+                  id={series.id.toString()}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {isSelectSeason ? (
+                    <Droppable key={series.id} id={series.id.toString()}>
+                      <SeasonList
+                        id={series.id}
+                        title={series.title}
+                        season={series.season}
+                      />
+                    </Droppable>
+                  ) : (
+                    <SeasonList
+                      id={series.id}
+                      title={series.title}
+                      season={series.season}
+                    />
+                  )}
+                </SortableContext>
+              </SeriesAccordion>
+            ))}
+            {animeData.series.map((series) => (
+              <SeriesAccordion key={series.id} data={series}>
+                <SortableContext
+                  items={series.season}
+                  key={series.id}
+                  id={series.id.toString()}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {isSelectSeason ? (
+                    <Droppable key={series.id} id={series.id.toString()}>
+                      <SeasonList
+                        id={series.id}
+                        title={series.title}
+                        season={series.season}
+                      />
+                    </Droppable>
+                  ) : (
+                    <SeasonList
+                      id={series.id}
+                      title={series.title}
+                      season={series.season}
+                    />
+                  )}
+                </SortableContext>
+              </SeriesAccordion>
+            ))}
             {animeData.series.map((series) => (
               <SeriesAccordion key={series.id} data={series}>
                 <SortableContext
@@ -527,16 +608,20 @@ export default function SeasonEdit() {
               id={nowEditSeason.id.toString()}
               strategy={verticalListSortingStrategy}
             >
-              <Card className="flex flex-col gap-2 p-4">
-                {nowEditSeason.episodes.map((episode) => (
-                  <Sortable
-                    key={episode.id}
-                    id={episode.id}
-                    className="hover:bg-zinc-100"
-                  >
-                    <EpisodeItem data={episode} />
-                  </Sortable>
-                ))}
+              <Card>
+                <ScrollArea className="h-[calc(100vh-(57px+64px+216px+16px+2px))]">
+                  <div className="flex flex-col gap-2 p-4">
+                    {nowEditSeason.episodes.map((episode) => (
+                      <Sortable
+                        key={episode.id}
+                        id={episode.id}
+                        className="hover:bg-zinc-100"
+                      >
+                        <EpisodeItem data={episode} />
+                      </Sortable>
+                    ))}
+                  </div>
+                </ScrollArea>
               </Card>
             </SortableContext>
           </div>

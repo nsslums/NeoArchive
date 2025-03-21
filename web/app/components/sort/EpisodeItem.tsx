@@ -1,5 +1,5 @@
 import { UniqueIdentifier } from "@dnd-kit/core";
-import { EpisodeDetail } from "~/routes/edit.$id";
+import { EpisodeDetail } from "~/routes/edit.mock";
 import { Card } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 import { CiMenuBurger } from "react-icons/ci";

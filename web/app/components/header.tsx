@@ -31,12 +31,8 @@ const data: { title: string; href: string }[] = [
     href: "/play/1",
   },
   {
-    title: "Edit 1",
-    href: "/edit/1",
-  },
-  {
-    title: "Edit 2",
-    href: "/edit2/1",
+    title: "Edit mock",
+    href: "/edit/mock",
   },
 ];
 

@@ -1,4 +1,4 @@
-import { SeriesDetail } from "~/routes/edit.$id";
+import { SeriesDetail } from "~/routes/edit.mock";
 import {
   Accordion,
   AccordionContent,
