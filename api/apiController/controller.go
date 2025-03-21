@@ -28,11 +28,15 @@ func StringPtoV(p *string, defaultValue string) string {
 	return *p
 }
 
-func IntPtoV(p *uint64, defaultValue uint64) uint64 {
+func IntPtoV(p *int, defaultValue int) int {
 	if p == nil {
 		return defaultValue // Default value
 	}
 	return *p
+}
+
+func IntVtoP(v int) *int {
+	return &v
 }
 
 // Generic Create Entity
@@ -58,7 +62,21 @@ func CreateGeneric(ctx echo.Context, apiBody interface{}, tableModel interface{}
 // Generic Get Entity
 func GetGeneric(ctx echo.Context, apiBody interface{}, tableModel interface{}, conversionBind func(), id int) error {
 	// Get from DB
-	result := dbc.First(&tableModel, id)
+	result := dbc.First(tableModel, id)
+	if result.Error != nil {
+		return ctx.JSON(http.StatusInternalServerError, result.Error)
+	}
+
+	// Convert table model to response body
+	conversionBind()
+
+	// Return response
+	return ctx.JSON(http.StatusOK, apiBody)
+}
+
+func GetGenericPreload(ctx echo.Context, apiBody interface{}, tableModel interface{}, conversionBind func(), id int, preloadField string) error {
+	// Get from DB
+	result := dbc.Preload(preloadField).First(tableModel, id)
 	if result.Error != nil {
 		return ctx.JSON(http.StatusInternalServerError, result.Error)
 	}
@@ -84,6 +102,35 @@ func UpdateGeneric(ctx echo.Context, apiBody interface{}, tableModel interface{}
 	result := dbc.Save(tableModel)
 	if result.Error != nil {
 		return ctx.JSON(http.StatusInternalServerError, result.Error)
+	}
+
+	// Return response
+	return ctx.JSON(http.StatusOK, apiBody)
+}
+
+func UpdateAssociationGeneric(ctx echo.Context, apiBody interface{}, tableModel interface{}, associationTableModel interface{}, associationName string, conversionBind func()) error {
+	// Get request body
+	if err := ctx.Bind(apiBody); err != nil {
+		return ctx.JSON(http.StatusBadRequest, err)
+	}
+
+	// Convert request body to table model
+	conversionBind()
+
+	// Update DB
+	err := dbc.Transaction(func(tx *gorm.DB) error {
+		if err := dbc.Model(tableModel).Updates(tableModel).Error; err != nil {
+			return err
+		}
+
+		if err := dbc.Model(tableModel).Association(associationName).Replace(associationTableModel); err != nil {
+			return err
+		}
+
+		return nil
+	})
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, err)
 	}
 
 	// Return response

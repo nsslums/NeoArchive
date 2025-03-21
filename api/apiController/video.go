@@ -12,7 +12,7 @@ func (a ApiController) CreateVideo(ctx echo.Context) error {
 
 	conversionBind := func() {
 		videoT.BroadcastTime = videoB.BroadcastTime
-		videoT.PlaybackTime = uint(videoB.PlaybackTime)
+		videoT.Length = uint(*videoB.Length)
 	}
 
 	return CreateGeneric(ctx, &videoB, &videoT, conversionBind)
@@ -25,7 +25,7 @@ func (a ApiController) GetVideo(ctx echo.Context, id int) error {
 	conversionBind := func() {
 		videoB.Id = int(videoT.ID)
 		videoB.BroadcastTime = videoT.BroadcastTime
-		videoB.PlaybackTime = int(videoT.PlaybackTime)
+		*videoB.Length = int(videoT.Length)
 	}
 
 	return GetGeneric(ctx, &videoB, &videoT, conversionBind, id)
@@ -38,7 +38,7 @@ func (a ApiController) UpdateVideo(ctx echo.Context) error {
 	conversionBind := func() {
 		videoT.ID = uint(videoB.Id)
 		videoT.BroadcastTime = videoB.BroadcastTime
-		videoT.PlaybackTime = uint(videoB.PlaybackTime)
+		videoT.Length = uint(*videoB.Length)
 	}
 
 	return UpdateGeneric(ctx, &videoB, &videoT, conversionBind)

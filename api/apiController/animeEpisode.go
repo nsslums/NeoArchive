@@ -15,6 +15,7 @@ func (a ApiController) CreateAnimeEpisode(ctx echo.Context) error {
 	conversionBind := func() {
 		animeEpisodeT.AnimeSeasonID = uint(animeEpisodeB.SeasonId)
 		animeEpisodeT.VideoID = uint(animeEpisodeB.VideoId)
+		animeEpisodeT.DisplayNumber = uint(IntPtoV(animeEpisodeB.DisplayNumber, 0))
 		animeEpisodeT.Subtitle = StringPtoV(animeEpisodeB.Subtitle, "")
 		animeEpisodeT.Number = StringPtoV(animeEpisodeB.Number, "")
 	}
@@ -33,16 +34,33 @@ func (a ApiController) GetAnimeEpisodeList(ctx echo.Context, seasonId int) error
 
 	for _, AnimeEpisodeT := range animeEpisodeListT {
 		animeEpisodeB := apiInterface.AnimeEpisode{
-			Id:       int(AnimeEpisodeT.ID),
-			SeasonId: int(AnimeEpisodeT.AnimeSeasonID),
-			VideoId:  int(AnimeEpisodeT.VideoID),
-			Subtitle: &AnimeEpisodeT.Subtitle,
-			Number:   &AnimeEpisodeT.Number,
+			Id:            int(AnimeEpisodeT.ID),
+			SeasonId:      int(AnimeEpisodeT.AnimeSeasonID),
+			VideoId:       int(AnimeEpisodeT.VideoID),
+			DisplayNumber: IntVtoP(int(AnimeEpisodeT.DisplayNumber)),
+			Subtitle:      &AnimeEpisodeT.Subtitle,
+			Number:        &AnimeEpisodeT.Number,
 		}
 		animeEpisodeListB = append(animeEpisodeListB, animeEpisodeB)
 	}
 
 	return ctx.JSON(http.StatusOK, animeEpisodeListB)
+}
+
+func (a ApiController) GetAnimeEpisode(ctx echo.Context, id int) error {
+	animeEpisodeT := db.AnimeEpisode{}
+	animeEpisodeB := apiInterface.AnimeEpisode{}
+
+	conversionBind := func() {
+		animeEpisodeB.Id = int(animeEpisodeT.ID)
+		animeEpisodeB.SeasonId = int(animeEpisodeT.AnimeSeasonID)
+		animeEpisodeB.VideoId = int(animeEpisodeT.VideoID)
+		animeEpisodeB.DisplayNumber = IntVtoP(int(animeEpisodeT.DisplayNumber))
+		animeEpisodeB.Subtitle = &animeEpisodeT.Subtitle
+		animeEpisodeB.Number = &animeEpisodeT.Number
+	}
+
+	return GetGeneric(ctx, &animeEpisodeB, &animeEpisodeT, conversionBind, id)
 }
 
 func (a ApiController) UpdateAnimeEpisode(ctx echo.Context) error {
@@ -53,6 +71,7 @@ func (a ApiController) UpdateAnimeEpisode(ctx echo.Context) error {
 		animeEpisodeT.ID = uint(animeEpisodeB.Id)
 		animeEpisodeT.AnimeSeasonID = uint(animeEpisodeB.SeasonId)
 		animeEpisodeT.VideoID = uint(animeEpisodeB.VideoId)
+		animeEpisodeT.DisplayNumber = uint(IntPtoV(animeEpisodeB.DisplayNumber, 0))
 		animeEpisodeT.Subtitle = StringPtoV(animeEpisodeB.Subtitle, "")
 		animeEpisodeT.Number = StringPtoV(animeEpisodeB.Number, "")
 	}

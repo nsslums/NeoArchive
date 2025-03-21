@@ -24,21 +24,31 @@ import (
 
 // AnimeEpisode defines model for AnimeEpisode.
 type AnimeEpisode struct {
-	Id       int     `json:"id"`
-	Number   *string `json:"number,omitempty"`
-	SeasonId int     `json:"season_id"`
-	Subtitle *string `json:"subtitle,omitempty"`
-	VideoId  int     `json:"video_id"`
+	DisplayNumber *int    `json:"display_number,omitempty"`
+	Id            int     `json:"id"`
+	Number        *string `json:"number,omitempty"`
+	SeasonId      int     `json:"season_id"`
+	Subtitle      *string `json:"subtitle,omitempty"`
+	VideoId       int     `json:"video_id"`
+}
+
+// AnimeEpisodeBase defines model for AnimeEpisodeBase.
+type AnimeEpisodeBase struct {
+	DisplayNumber *int    `json:"display_number,omitempty"`
+	Number        *string `json:"number,omitempty"`
+	SeasonId      int     `json:"season_id"`
+	Subtitle      *string `json:"subtitle,omitempty"`
+	VideoId       int     `json:"video_id"`
 }
 
 // AnimeSeason defines model for AnimeSeason.
 type AnimeSeason struct {
-	// Casts 出演者
-	Casts *string `json:"casts,omitempty"`
+	CastsId *[]int `json:"casts_id,omitempty"`
 
 	// Cours クール(秋アニメ,冬アニメ,春アニメ,夏アニメ)
-	Cours *string `json:"cours,omitempty"`
-	Id    int     `json:"id"`
+	Cours         *string `json:"cours,omitempty"`
+	DisplayNumber *int    `json:"display_number,omitempty"`
+	Id            int     `json:"id"`
 
 	// Production 制作会社
 	Production *string `json:"production,omitempty"`
@@ -49,6 +59,34 @@ type AnimeSeason struct {
 	Title    string  `json:"title"`
 }
 
+// AnimeSeasonBase defines model for AnimeSeasonBase.
+type AnimeSeasonBase struct {
+	CastsId *[]int `json:"casts_id,omitempty"`
+
+	// Cours クール(秋アニメ,冬アニメ,春アニメ,夏アニメ)
+	Cours         *string `json:"cours,omitempty"`
+	DisplayNumber *int    `json:"display_number,omitempty"`
+
+	// Production 制作会社
+	Production *string `json:"production,omitempty"`
+	SeriesId   int     `json:"series_id"`
+
+	// Synopsis あらすじ
+	Synopsis *string `json:"synopsis,omitempty"`
+	Title    string  `json:"title"`
+}
+
+// Cast defines model for Cast.
+type Cast struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
+// CastBase defines model for CastBase.
+type CastBase struct {
+	Name string `json:"name"`
+}
+
 // DefaultErrorResponse defines model for DefaultErrorResponse.
 type DefaultErrorResponse struct {
 	Message *string `json:"message,omitempty"`
@@ -56,9 +94,15 @@ type DefaultErrorResponse struct {
 
 // Series defines model for Series.
 type Series struct {
-	Id    int    `json:"id"`
-	Tags  *[]Tag `json:"tags,omitempty"`
-	Title string `json:"title"`
+	Id     int    `json:"id"`
+	TagsId *[]int `json:"tags_id,omitempty"`
+	Title  string `json:"title"`
+}
+
+// SeriesBase defines model for SeriesBase.
+type SeriesBase struct {
+	TagsId *[]int `json:"tags_id,omitempty"`
+	Title  string `json:"title"`
 }
 
 // Tag defines model for Tag.
@@ -67,18 +111,34 @@ type Tag struct {
 	Name string `json:"name"`
 }
 
+// TagBase defines model for TagBase.
+type TagBase struct {
+	Name string `json:"name"`
+}
+
 // Video defines model for Video.
 type Video struct {
 	BroadcastTime time.Time `json:"broadcast_time"`
 	Id            int       `json:"id"`
-	PlaybackTime  int       `json:"playback_time"`
+	Length        *int      `json:"length,omitempty"`
+}
+
+// VideoBase defines model for VideoBase.
+type VideoBase struct {
+	BroadcastTime time.Time `json:"broadcast_time"`
+	Length        *int      `json:"length,omitempty"`
 }
 
 // VideoLog defines model for VideoLog.
 type VideoLog struct {
 	Id           int `json:"id"`
 	PlaybackTime int `json:"playback_time"`
-	UserId       int `json:"user_id"`
+	VideoId      int `json:"video_id"`
+}
+
+// VideoLogBase defines model for VideoLogBase.
+type VideoLogBase struct {
+	PlaybackTime int `json:"playback_time"`
 	VideoId      int `json:"video_id"`
 }
 
@@ -89,37 +149,43 @@ type GetSeriesListParams struct {
 }
 
 // CreateAnimeEpisodeJSONRequestBody defines body for CreateAnimeEpisode for application/json ContentType.
-type CreateAnimeEpisodeJSONRequestBody = AnimeEpisode
+type CreateAnimeEpisodeJSONRequestBody = AnimeEpisodeBase
 
 // UpdateAnimeEpisodeJSONRequestBody defines body for UpdateAnimeEpisode for application/json ContentType.
 type UpdateAnimeEpisodeJSONRequestBody = AnimeEpisode
 
 // CreateAnimeSeasonJSONRequestBody defines body for CreateAnimeSeason for application/json ContentType.
-type CreateAnimeSeasonJSONRequestBody = AnimeSeason
+type CreateAnimeSeasonJSONRequestBody = AnimeSeasonBase
 
 // UpdateAnimeSeasonJSONRequestBody defines body for UpdateAnimeSeason for application/json ContentType.
 type UpdateAnimeSeasonJSONRequestBody = AnimeSeason
 
+// CreateCastJSONRequestBody defines body for CreateCast for application/json ContentType.
+type CreateCastJSONRequestBody = Cast
+
+// UpdateCastJSONRequestBody defines body for UpdateCast for application/json ContentType.
+type UpdateCastJSONRequestBody = Cast
+
 // CreateSeriesJSONRequestBody defines body for CreateSeries for application/json ContentType.
-type CreateSeriesJSONRequestBody = Series
+type CreateSeriesJSONRequestBody = SeriesBase
 
 // UpdateSeriesJSONRequestBody defines body for UpdateSeries for application/json ContentType.
 type UpdateSeriesJSONRequestBody = Series
 
 // CreateTagJSONRequestBody defines body for CreateTag for application/json ContentType.
-type CreateTagJSONRequestBody = Tag
+type CreateTagJSONRequestBody = TagBase
 
 // UpdateTagJSONRequestBody defines body for UpdateTag for application/json ContentType.
 type UpdateTagJSONRequestBody = Tag
 
 // CreateVideoJSONRequestBody defines body for CreateVideo for application/json ContentType.
-type CreateVideoJSONRequestBody = Video
+type CreateVideoJSONRequestBody = VideoBase
 
 // UpdateVideoJSONRequestBody defines body for UpdateVideo for application/json ContentType.
 type UpdateVideoJSONRequestBody = Video
 
 // CreateVideoLogJSONRequestBody defines body for CreateVideoLog for application/json ContentType.
-type CreateVideoLogJSONRequestBody = VideoLog
+type CreateVideoLogJSONRequestBody = VideoLogBase
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -207,6 +273,9 @@ type ClientInterface interface {
 	// DeleteAnimeEpisode request
 	DeleteAnimeEpisode(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetAnimeEpisode request
+	GetAnimeEpisode(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetAnimeEpisodeList request
 	GetAnimeEpisodeList(ctx context.Context, seasonId int, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -223,8 +292,30 @@ type ClientInterface interface {
 	// DeleteAnimeSeason request
 	DeleteAnimeSeason(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetAnimeSeason request
+	GetAnimeSeason(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetAnimeSeasonList request
 	GetAnimeSeasonList(ctx context.Context, seriesId int, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateCastWithBody request with any body
+	CreateCastWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateCast(ctx context.Context, body CreateCastJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateCastWithBody request with any body
+	UpdateCastWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateCast(ctx context.Context, body UpdateCastJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteCast request
+	DeleteCast(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetCast request
+	GetCast(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetCastList request
+	GetCastList(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CreateSeriesWithBody request with any body
 	CreateSeriesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -238,6 +329,9 @@ type ClientInterface interface {
 
 	// DeleteSeries request
 	DeleteSeries(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSeries request
+	GetSeries(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetSeriesList request
 	GetSeriesList(ctx context.Context, params *GetSeriesListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -343,6 +437,18 @@ func (c *Client) DeleteAnimeEpisode(ctx context.Context, id int, reqEditors ...R
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetAnimeEpisode(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAnimeEpisodeRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetAnimeEpisodeList(ctx context.Context, seasonId int, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAnimeEpisodeListRequest(c.Server, seasonId)
 	if err != nil {
@@ -415,8 +521,104 @@ func (c *Client) DeleteAnimeSeason(ctx context.Context, id int, reqEditors ...Re
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetAnimeSeason(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAnimeSeasonRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetAnimeSeasonList(ctx context.Context, seriesId int, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetAnimeSeasonListRequest(c.Server, seriesId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateCastWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateCastRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateCast(ctx context.Context, body CreateCastJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateCastRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateCastWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateCastRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateCast(ctx context.Context, body UpdateCastJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateCastRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteCast(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteCastRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetCast(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetCastRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetCastList(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetCastListRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -477,6 +679,18 @@ func (c *Client) UpdateSeries(ctx context.Context, body UpdateSeriesJSONRequestB
 
 func (c *Client) DeleteSeries(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteSeriesRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetSeries(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSeriesRequest(c.Server, id)
 	if err != nil {
 		return nil, err
 	}
@@ -793,6 +1007,40 @@ func NewDeleteAnimeEpisodeRequest(server string, id int) (*http.Request, error) 
 	return req, nil
 }
 
+// NewGetAnimeEpisodeRequest generates requests for GetAnimeEpisode
+func NewGetAnimeEpisodeRequest(server string, id int) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/anime/episode/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetAnimeEpisodeListRequest generates requests for GetAnimeEpisodeList
 func NewGetAnimeEpisodeListRequest(server string, seasonId int) (*http.Request, error) {
 	var err error
@@ -941,6 +1189,40 @@ func NewDeleteAnimeSeasonRequest(server string, id int) (*http.Request, error) {
 	return req, nil
 }
 
+// NewGetAnimeSeasonRequest generates requests for GetAnimeSeason
+func NewGetAnimeSeasonRequest(server string, id int) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/anime/season/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetAnimeSeasonListRequest generates requests for GetAnimeSeasonList
 func NewGetAnimeSeasonListRequest(server string, seriesId int) (*http.Request, error) {
 	var err error
@@ -958,6 +1240,181 @@ func NewGetAnimeSeasonListRequest(server string, seriesId int) (*http.Request, e
 	}
 
 	operationPath := fmt.Sprintf("/anime/season_list/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateCastRequest calls the generic CreateCast builder with application/json body
+func NewCreateCastRequest(server string, body CreateCastJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateCastRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateCastRequestWithBody generates requests for CreateCast with any type of body
+func NewCreateCastRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cast")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewUpdateCastRequest calls the generic UpdateCast builder with application/json body
+func NewUpdateCastRequest(server string, body UpdateCastJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateCastRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewUpdateCastRequestWithBody generates requests for UpdateCast with any type of body
+func NewUpdateCastRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cast")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteCastRequest generates requests for DeleteCast
+func NewDeleteCastRequest(server string, id int) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cast/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetCastRequest generates requests for GetCast
+func NewGetCastRequest(server string, id int) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cast/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetCastListRequest generates requests for GetCastList
+func NewGetCastListRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cast_list")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -1082,6 +1539,40 @@ func NewDeleteSeriesRequest(server string, id int) (*http.Request, error) {
 	}
 
 	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetSeriesRequest generates requests for GetSeries
+func NewGetSeriesRequest(server string, id int) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/series/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1557,6 +2048,9 @@ type ClientWithResponsesInterface interface {
 	// DeleteAnimeEpisodeWithResponse request
 	DeleteAnimeEpisodeWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*DeleteAnimeEpisodeResponse, error)
 
+	// GetAnimeEpisodeWithResponse request
+	GetAnimeEpisodeWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*GetAnimeEpisodeResponse, error)
+
 	// GetAnimeEpisodeListWithResponse request
 	GetAnimeEpisodeListWithResponse(ctx context.Context, seasonId int, reqEditors ...RequestEditorFn) (*GetAnimeEpisodeListResponse, error)
 
@@ -1573,8 +2067,30 @@ type ClientWithResponsesInterface interface {
 	// DeleteAnimeSeasonWithResponse request
 	DeleteAnimeSeasonWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*DeleteAnimeSeasonResponse, error)
 
+	// GetAnimeSeasonWithResponse request
+	GetAnimeSeasonWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*GetAnimeSeasonResponse, error)
+
 	// GetAnimeSeasonListWithResponse request
 	GetAnimeSeasonListWithResponse(ctx context.Context, seriesId int, reqEditors ...RequestEditorFn) (*GetAnimeSeasonListResponse, error)
+
+	// CreateCastWithBodyWithResponse request with any body
+	CreateCastWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateCastResponse, error)
+
+	CreateCastWithResponse(ctx context.Context, body CreateCastJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateCastResponse, error)
+
+	// UpdateCastWithBodyWithResponse request with any body
+	UpdateCastWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateCastResponse, error)
+
+	UpdateCastWithResponse(ctx context.Context, body UpdateCastJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateCastResponse, error)
+
+	// DeleteCastWithResponse request
+	DeleteCastWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*DeleteCastResponse, error)
+
+	// GetCastWithResponse request
+	GetCastWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*GetCastResponse, error)
+
+	// GetCastListWithResponse request
+	GetCastListWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetCastListResponse, error)
 
 	// CreateSeriesWithBodyWithResponse request with any body
 	CreateSeriesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateSeriesResponse, error)
@@ -1588,6 +2104,9 @@ type ClientWithResponsesInterface interface {
 
 	// DeleteSeriesWithResponse request
 	DeleteSeriesWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*DeleteSeriesResponse, error)
+
+	// GetSeriesWithResponse request
+	GetSeriesWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*GetSeriesResponse, error)
 
 	// GetSeriesListWithResponse request
 	GetSeriesListWithResponse(ctx context.Context, params *GetSeriesListParams, reqEditors ...RequestEditorFn) (*GetSeriesListResponse, error)
@@ -1636,7 +2155,7 @@ type ClientWithResponsesInterface interface {
 type CreateAnimeEpisodeResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *AnimeEpisode
+	JSON201      *AnimeEpisodeBase
 	JSONDefault  *DefaultErrorResponse
 }
 
@@ -1701,6 +2220,29 @@ func (r DeleteAnimeEpisodeResponse) StatusCode() int {
 	return 0
 }
 
+type GetAnimeEpisodeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AnimeEpisode
+	JSONDefault  *DefaultErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAnimeEpisodeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAnimeEpisodeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetAnimeEpisodeListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -1727,7 +2269,7 @@ func (r GetAnimeEpisodeListResponse) StatusCode() int {
 type CreateAnimeSeasonResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *AnimeSeason
+	JSON201      *AnimeSeasonBase
 	JSONDefault  *DefaultErrorResponse
 }
 
@@ -1792,6 +2334,29 @@ func (r DeleteAnimeSeasonResponse) StatusCode() int {
 	return 0
 }
 
+type GetAnimeSeasonResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AnimeSeason
+	JSONDefault  *DefaultErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAnimeSeasonResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAnimeSeasonResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetAnimeSeasonListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -1815,10 +2380,124 @@ func (r GetAnimeSeasonListResponse) StatusCode() int {
 	return 0
 }
 
+type CreateCastResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *Cast
+	JSONDefault  *DefaultErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateCastResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateCastResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateCastResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Cast
+	JSONDefault  *DefaultErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateCastResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateCastResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteCastResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSONDefault  *DefaultErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteCastResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteCastResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetCastResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Cast
+	JSONDefault  *DefaultErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetCastResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetCastResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetCastListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]Cast
+	JSONDefault  *DefaultErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetCastListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetCastListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type CreateSeriesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Series
+	JSON201      *SeriesBase
 	JSONDefault  *DefaultErrorResponse
 }
 
@@ -1883,6 +2562,29 @@ func (r DeleteSeriesResponse) StatusCode() int {
 	return 0
 }
 
+type GetSeriesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Series
+	JSONDefault  *DefaultErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSeriesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSeriesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetSeriesListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -1909,7 +2611,7 @@ func (r GetSeriesListResponse) StatusCode() int {
 type CreateTagResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Tag
+	JSON201      *TagBase
 	JSONDefault  *DefaultErrorResponse
 }
 
@@ -2000,7 +2702,7 @@ func (r GetTagListResponse) StatusCode() int {
 type CreateVideoResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *Video
+	JSON201      *VideoBase
 	JSONDefault  *DefaultErrorResponse
 }
 
@@ -2091,7 +2793,7 @@ func (r GetVideoResponse) StatusCode() int {
 type CreateVideoLogResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *VideoLog
+	JSON201      *VideoLogBase
 	JSONDefault  *DefaultErrorResponse
 }
 
@@ -2177,6 +2879,15 @@ func (c *ClientWithResponses) DeleteAnimeEpisodeWithResponse(ctx context.Context
 	return ParseDeleteAnimeEpisodeResponse(rsp)
 }
 
+// GetAnimeEpisodeWithResponse request returning *GetAnimeEpisodeResponse
+func (c *ClientWithResponses) GetAnimeEpisodeWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*GetAnimeEpisodeResponse, error) {
+	rsp, err := c.GetAnimeEpisode(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAnimeEpisodeResponse(rsp)
+}
+
 // GetAnimeEpisodeListWithResponse request returning *GetAnimeEpisodeListResponse
 func (c *ClientWithResponses) GetAnimeEpisodeListWithResponse(ctx context.Context, seasonId int, reqEditors ...RequestEditorFn) (*GetAnimeEpisodeListResponse, error) {
 	rsp, err := c.GetAnimeEpisodeList(ctx, seasonId, reqEditors...)
@@ -2229,6 +2940,15 @@ func (c *ClientWithResponses) DeleteAnimeSeasonWithResponse(ctx context.Context,
 	return ParseDeleteAnimeSeasonResponse(rsp)
 }
 
+// GetAnimeSeasonWithResponse request returning *GetAnimeSeasonResponse
+func (c *ClientWithResponses) GetAnimeSeasonWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*GetAnimeSeasonResponse, error) {
+	rsp, err := c.GetAnimeSeason(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAnimeSeasonResponse(rsp)
+}
+
 // GetAnimeSeasonListWithResponse request returning *GetAnimeSeasonListResponse
 func (c *ClientWithResponses) GetAnimeSeasonListWithResponse(ctx context.Context, seriesId int, reqEditors ...RequestEditorFn) (*GetAnimeSeasonListResponse, error) {
 	rsp, err := c.GetAnimeSeasonList(ctx, seriesId, reqEditors...)
@@ -2236,6 +2956,67 @@ func (c *ClientWithResponses) GetAnimeSeasonListWithResponse(ctx context.Context
 		return nil, err
 	}
 	return ParseGetAnimeSeasonListResponse(rsp)
+}
+
+// CreateCastWithBodyWithResponse request with arbitrary body returning *CreateCastResponse
+func (c *ClientWithResponses) CreateCastWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateCastResponse, error) {
+	rsp, err := c.CreateCastWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateCastResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateCastWithResponse(ctx context.Context, body CreateCastJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateCastResponse, error) {
+	rsp, err := c.CreateCast(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateCastResponse(rsp)
+}
+
+// UpdateCastWithBodyWithResponse request with arbitrary body returning *UpdateCastResponse
+func (c *ClientWithResponses) UpdateCastWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateCastResponse, error) {
+	rsp, err := c.UpdateCastWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateCastResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateCastWithResponse(ctx context.Context, body UpdateCastJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateCastResponse, error) {
+	rsp, err := c.UpdateCast(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateCastResponse(rsp)
+}
+
+// DeleteCastWithResponse request returning *DeleteCastResponse
+func (c *ClientWithResponses) DeleteCastWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*DeleteCastResponse, error) {
+	rsp, err := c.DeleteCast(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteCastResponse(rsp)
+}
+
+// GetCastWithResponse request returning *GetCastResponse
+func (c *ClientWithResponses) GetCastWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*GetCastResponse, error) {
+	rsp, err := c.GetCast(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetCastResponse(rsp)
+}
+
+// GetCastListWithResponse request returning *GetCastListResponse
+func (c *ClientWithResponses) GetCastListWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetCastListResponse, error) {
+	rsp, err := c.GetCastList(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetCastListResponse(rsp)
 }
 
 // CreateSeriesWithBodyWithResponse request with arbitrary body returning *CreateSeriesResponse
@@ -2279,6 +3060,15 @@ func (c *ClientWithResponses) DeleteSeriesWithResponse(ctx context.Context, id i
 		return nil, err
 	}
 	return ParseDeleteSeriesResponse(rsp)
+}
+
+// GetSeriesWithResponse request returning *GetSeriesResponse
+func (c *ClientWithResponses) GetSeriesWithResponse(ctx context.Context, id int, reqEditors ...RequestEditorFn) (*GetSeriesResponse, error) {
+	rsp, err := c.GetSeries(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSeriesResponse(rsp)
 }
 
 // GetSeriesListWithResponse request returning *GetSeriesListResponse
@@ -2435,7 +3225,7 @@ func ParseCreateAnimeEpisodeResponse(rsp *http.Response) (*CreateAnimeEpisodeRes
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest AnimeEpisode
+		var dest AnimeEpisodeBase
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -2512,6 +3302,39 @@ func ParseDeleteAnimeEpisodeResponse(rsp *http.Response) (*DeleteAnimeEpisodeRes
 	return response, nil
 }
 
+// ParseGetAnimeEpisodeResponse parses an HTTP response from a GetAnimeEpisodeWithResponse call
+func ParseGetAnimeEpisodeResponse(rsp *http.Response) (*GetAnimeEpisodeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAnimeEpisodeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AnimeEpisode
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest DefaultErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetAnimeEpisodeListResponse parses an HTTP response from a GetAnimeEpisodeListWithResponse call
 func ParseGetAnimeEpisodeListResponse(rsp *http.Response) (*GetAnimeEpisodeListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -2560,7 +3383,7 @@ func ParseCreateAnimeSeasonResponse(rsp *http.Response) (*CreateAnimeSeasonRespo
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest AnimeSeason
+		var dest AnimeSeasonBase
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -2637,6 +3460,39 @@ func ParseDeleteAnimeSeasonResponse(rsp *http.Response) (*DeleteAnimeSeasonRespo
 	return response, nil
 }
 
+// ParseGetAnimeSeasonResponse parses an HTTP response from a GetAnimeSeasonWithResponse call
+func ParseGetAnimeSeasonResponse(rsp *http.Response) (*GetAnimeSeasonResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAnimeSeasonResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AnimeSeason
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest DefaultErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetAnimeSeasonListResponse parses an HTTP response from a GetAnimeSeasonListWithResponse call
 func ParseGetAnimeSeasonListResponse(rsp *http.Response) (*GetAnimeSeasonListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -2670,6 +3526,164 @@ func ParseGetAnimeSeasonListResponse(rsp *http.Response) (*GetAnimeSeasonListRes
 	return response, nil
 }
 
+// ParseCreateCastResponse parses an HTTP response from a CreateCastWithResponse call
+func ParseCreateCastResponse(rsp *http.Response) (*CreateCastResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateCastResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Cast
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest DefaultErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateCastResponse parses an HTTP response from a UpdateCastWithResponse call
+func ParseUpdateCastResponse(rsp *http.Response) (*UpdateCastResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateCastResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Cast
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest DefaultErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteCastResponse parses an HTTP response from a DeleteCastWithResponse call
+func ParseDeleteCastResponse(rsp *http.Response) (*DeleteCastResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteCastResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest DefaultErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetCastResponse parses an HTTP response from a GetCastWithResponse call
+func ParseGetCastResponse(rsp *http.Response) (*GetCastResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetCastResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Cast
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest DefaultErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetCastListResponse parses an HTTP response from a GetCastListWithResponse call
+func ParseGetCastListResponse(rsp *http.Response) (*GetCastListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetCastListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []Cast
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest DefaultErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseCreateSeriesResponse parses an HTTP response from a CreateSeriesWithResponse call
 func ParseCreateSeriesResponse(rsp *http.Response) (*CreateSeriesResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -2685,7 +3699,7 @@ func ParseCreateSeriesResponse(rsp *http.Response) (*CreateSeriesResponse, error
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Series
+		var dest SeriesBase
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -2762,6 +3776,39 @@ func ParseDeleteSeriesResponse(rsp *http.Response) (*DeleteSeriesResponse, error
 	return response, nil
 }
 
+// ParseGetSeriesResponse parses an HTTP response from a GetSeriesWithResponse call
+func ParseGetSeriesResponse(rsp *http.Response) (*GetSeriesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSeriesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Series
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest DefaultErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetSeriesListResponse parses an HTTP response from a GetSeriesListWithResponse call
 func ParseGetSeriesListResponse(rsp *http.Response) (*GetSeriesListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -2810,7 +3857,7 @@ func ParseCreateTagResponse(rsp *http.Response) (*CreateTagResponse, error) {
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Tag
+		var dest TagBase
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -2935,7 +3982,7 @@ func ParseCreateVideoResponse(rsp *http.Response) (*CreateVideoResponse, error) 
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest Video
+		var dest VideoBase
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -3060,7 +4107,7 @@ func ParseCreateVideoLogResponse(rsp *http.Response) (*CreateVideoLogResponse, e
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest VideoLog
+		var dest VideoLogBase
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -3122,6 +4169,9 @@ type ServerInterface interface {
 	// Delete anime episode
 	// (DELETE /anime/episode/{id})
 	DeleteAnimeEpisode(ctx echo.Context, id int) error
+	// Get anime episode
+	// (GET /anime/episode/{id})
+	GetAnimeEpisode(ctx echo.Context, id int) error
 	// Get anime episode list
 	// (GET /anime/episode_list/{season_id})
 	GetAnimeEpisodeList(ctx echo.Context, seasonId int) error
@@ -3134,9 +4184,27 @@ type ServerInterface interface {
 	// Delete anime season
 	// (DELETE /anime/season/{id})
 	DeleteAnimeSeason(ctx echo.Context, id int) error
+	// Get anime season
+	// (GET /anime/season/{id})
+	GetAnimeSeason(ctx echo.Context, id int) error
 	// Get anime season list
 	// (GET /anime/season_list/{series_id})
 	GetAnimeSeasonList(ctx echo.Context, seriesId int) error
+	// Create cast
+	// (POST /cast)
+	CreateCast(ctx echo.Context) error
+	// Update cast
+	// (PUT /cast)
+	UpdateCast(ctx echo.Context) error
+	// Delete cast
+	// (DELETE /cast/{id})
+	DeleteCast(ctx echo.Context, id int) error
+	// Get cast
+	// (GET /cast/{id})
+	GetCast(ctx echo.Context, id int) error
+	// Get cast list
+	// (GET /cast_list)
+	GetCastList(ctx echo.Context) error
 	// Create series
 	// (POST /series)
 	CreateSeries(ctx echo.Context) error
@@ -3146,6 +4214,9 @@ type ServerInterface interface {
 	// Delete series
 	// (DELETE /series/{id})
 	DeleteSeries(ctx echo.Context, id int) error
+	// Get series
+	// (GET /series/{id})
+	GetSeries(ctx echo.Context, id int) error
 	// Get series list
 	// (GET /series_list)
 	GetSeriesList(ctx echo.Context, params GetSeriesListParams) error
@@ -3220,6 +4291,22 @@ func (w *ServerInterfaceWrapper) DeleteAnimeEpisode(ctx echo.Context) error {
 	return err
 }
 
+// GetAnimeEpisode converts echo context to params.
+func (w *ServerInterfaceWrapper) GetAnimeEpisode(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetAnimeEpisode(ctx, id)
+	return err
+}
+
 // GetAnimeEpisodeList converts echo context to params.
 func (w *ServerInterfaceWrapper) GetAnimeEpisodeList(ctx echo.Context) error {
 	var err error
@@ -3270,6 +4357,22 @@ func (w *ServerInterfaceWrapper) DeleteAnimeSeason(ctx echo.Context) error {
 	return err
 }
 
+// GetAnimeSeason converts echo context to params.
+func (w *ServerInterfaceWrapper) GetAnimeSeason(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetAnimeSeason(ctx, id)
+	return err
+}
+
 // GetAnimeSeasonList converts echo context to params.
 func (w *ServerInterfaceWrapper) GetAnimeSeasonList(ctx echo.Context) error {
 	var err error
@@ -3283,6 +4386,65 @@ func (w *ServerInterfaceWrapper) GetAnimeSeasonList(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetAnimeSeasonList(ctx, seriesId)
+	return err
+}
+
+// CreateCast converts echo context to params.
+func (w *ServerInterfaceWrapper) CreateCast(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.CreateCast(ctx)
+	return err
+}
+
+// UpdateCast converts echo context to params.
+func (w *ServerInterfaceWrapper) UpdateCast(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.UpdateCast(ctx)
+	return err
+}
+
+// DeleteCast converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteCast(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.DeleteCast(ctx, id)
+	return err
+}
+
+// GetCast converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCast(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCast(ctx, id)
+	return err
+}
+
+// GetCastList converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCastList(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCastList(ctx)
 	return err
 }
 
@@ -3317,6 +4479,22 @@ func (w *ServerInterfaceWrapper) DeleteSeries(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.DeleteSeries(ctx, id)
+	return err
+}
+
+// GetSeries converts echo context to params.
+func (w *ServerInterfaceWrapper) GetSeries(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetSeries(ctx, id)
 	return err
 }
 
@@ -3487,14 +4665,22 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/anime/episode", wrapper.CreateAnimeEpisode)
 	router.PUT(baseURL+"/anime/episode", wrapper.UpdateAnimeEpisode)
 	router.DELETE(baseURL+"/anime/episode/:id", wrapper.DeleteAnimeEpisode)
+	router.GET(baseURL+"/anime/episode/:id", wrapper.GetAnimeEpisode)
 	router.GET(baseURL+"/anime/episode_list/:season_id", wrapper.GetAnimeEpisodeList)
 	router.POST(baseURL+"/anime/season", wrapper.CreateAnimeSeason)
 	router.PUT(baseURL+"/anime/season", wrapper.UpdateAnimeSeason)
 	router.DELETE(baseURL+"/anime/season/:id", wrapper.DeleteAnimeSeason)
+	router.GET(baseURL+"/anime/season/:id", wrapper.GetAnimeSeason)
 	router.GET(baseURL+"/anime/season_list/:series_id", wrapper.GetAnimeSeasonList)
+	router.POST(baseURL+"/cast", wrapper.CreateCast)
+	router.PUT(baseURL+"/cast", wrapper.UpdateCast)
+	router.DELETE(baseURL+"/cast/:id", wrapper.DeleteCast)
+	router.GET(baseURL+"/cast/:id", wrapper.GetCast)
+	router.GET(baseURL+"/cast_list", wrapper.GetCastList)
 	router.POST(baseURL+"/series", wrapper.CreateSeries)
 	router.PUT(baseURL+"/series", wrapper.UpdateSeries)
 	router.DELETE(baseURL+"/series/:id", wrapper.DeleteSeries)
+	router.GET(baseURL+"/series/:id", wrapper.GetSeries)
 	router.GET(baseURL+"/series_list", wrapper.GetSeriesList)
 	router.POST(baseURL+"/tag", wrapper.CreateTag)
 	router.PUT(baseURL+"/tag", wrapper.UpdateTag)
@@ -3512,29 +4698,34 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"jX0wP57/FwAA//+jF/+VukAAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
