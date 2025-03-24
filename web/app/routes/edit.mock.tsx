@@ -31,6 +31,7 @@ import { Card } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
 import { EpisodeItem } from "~/components/sort/EpisodeItem";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { EditSortable } from "~/components/sort/EditSortable";
 
 type TagDetail = {
   id: number;
@@ -489,6 +490,37 @@ export default function SeasonEdit() {
     </div>
   );
 
+  function HandleChangeEpisodeData(editData: EpisodeDetail) {
+    setanimeData((prevData) => {
+      return {
+        ...prevData,
+        series: prevData.series.map((series) => ({
+          ...series,
+          season: series.season.map((season) => {
+            if (season.id !== nowEditSeason.id) {
+              return { ...season };
+            }
+            return {
+              ...season,
+              episodes: season.episodes.map((episode) => {
+                if (episode.id !== editData.id) {
+                  return {
+                    ...episode,
+                  };
+                }
+                return {
+                  ...episode,
+                  number: editData.number,
+                  subtitle: editData.subtitle,
+                };
+              }),
+            };
+          }),
+        })),
+      };
+    });
+  }
+
   return (
     <div>
       <div className="flex gap-12">
@@ -501,58 +533,6 @@ export default function SeasonEdit() {
           id={animeData.id}
         >
           <div className="flex flex-col gap-4 w-[400px] h-[calc(100vh-(57px+62px+2px))] pb-4 sticky top-0 overflow-auto no-scrollbar">
-            {animeData.series.map((series) => (
-              <SeriesAccordion key={series.id} data={series}>
-                <SortableContext
-                  items={series.season}
-                  key={series.id}
-                  id={series.id.toString()}
-                  strategy={verticalListSortingStrategy}
-                >
-                  {isSelectSeason ? (
-                    <Droppable key={series.id} id={series.id.toString()}>
-                      <SeasonList
-                        id={series.id}
-                        title={series.title}
-                        season={series.season}
-                      />
-                    </Droppable>
-                  ) : (
-                    <SeasonList
-                      id={series.id}
-                      title={series.title}
-                      season={series.season}
-                    />
-                  )}
-                </SortableContext>
-              </SeriesAccordion>
-            ))}
-            {animeData.series.map((series) => (
-              <SeriesAccordion key={series.id} data={series}>
-                <SortableContext
-                  items={series.season}
-                  key={series.id}
-                  id={series.id.toString()}
-                  strategy={verticalListSortingStrategy}
-                >
-                  {isSelectSeason ? (
-                    <Droppable key={series.id} id={series.id.toString()}>
-                      <SeasonList
-                        id={series.id}
-                        title={series.title}
-                        season={series.season}
-                      />
-                    </Droppable>
-                  ) : (
-                    <SeasonList
-                      id={series.id}
-                      title={series.title}
-                      season={series.season}
-                    />
-                  )}
-                </SortableContext>
-              </SeriesAccordion>
-            ))}
             {animeData.series.map((series) => (
               <SeriesAccordion key={series.id} data={series}>
                 <SortableContext
@@ -612,13 +592,16 @@ export default function SeasonEdit() {
                 <ScrollArea className="h-[calc(100vh-(57px+64px+216px+16px+2px))]">
                   <div className="flex flex-col gap-2 p-4">
                     {nowEditSeason.episodes.map((episode) => (
-                      <Sortable
+                      <EditSortable
                         key={episode.id}
                         id={episode.id}
                         className="hover:bg-zinc-100"
                       >
-                        <EpisodeItem data={episode} />
-                      </Sortable>
+                        <EpisodeItem
+                          data_init={episode}
+                          setAnimeData={HandleChangeEpisodeData}
+                        />
+                      </EditSortable>
                     ))}
                   </div>
                 </ScrollArea>
@@ -630,9 +613,13 @@ export default function SeasonEdit() {
               isSelectSeason ? (
                 <MenuSeasonItem value={nowEditSeason.title} />
               ) : (
-                <EpisodeItem
-                  data={nowEditSeason.episodes.find((ep) => ep.id == activeId)!}
-                />
+                <EditSortable className="opacity-85" id={""}>
+                  <EpisodeItem
+                    data_init={
+                      nowEditSeason.episodes.find((ep) => ep.id == activeId)!
+                    }
+                  />
+                </EditSortable>
               )
             ) : null}
           </DragOverlay>
