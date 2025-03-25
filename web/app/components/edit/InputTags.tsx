@@ -21,7 +21,6 @@ export const InputTags = forwardRef<HTMLInputElement, InputTagsProps>(
       if (pendingDataPoint) {
         const setData: CastDetail = { id: Date.now(), name: pendingDataPoint };
         const newDataPoints = new Set([...value, setData]);
-        console.log(Array.from(newDataPoints));
         onChange(Array.from(newDataPoints));
         setPendingDataPoint("");
       }

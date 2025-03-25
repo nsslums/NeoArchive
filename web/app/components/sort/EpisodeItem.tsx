@@ -33,27 +33,25 @@ const TextOrInput: React.FC<TextOrInputProps> = ({
 };
 
 type EpisodeItemProps = {
-  data_init: EpisodeDetail;
+  episode: EpisodeDetail;
   className?: string;
   setAnimeData?: (editData: EpisodeDetail) => void;
 };
 
 export function EpisodeItem({
-  data_init,
+  episode,
   className,
   setAnimeData,
 }: EpisodeItemProps) {
   const [isEdit, setIsEdit] = useState(false);
-  const [data, setData] = useState<EpisodeDetail>(data_init);
+  const [data, setData] = useState<EpisodeDetail>(episode);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }
-
-  useEffect(() => {
+    const newData = { ...data, [e.target.name]: e.target.value };
+    setData(newData);
     if (!setAnimeData) return;
-    setAnimeData(data);
-  }, [data]);
+    setAnimeData(newData);
+  }
 
   return (
     <div className={`flex gap-4 relative ${className}`}>
@@ -63,14 +61,14 @@ export function EpisodeItem({
       <div>
         <TextOrInput
           name="number"
-          value={data?.number}
+          value={data.number}
           isEdit={isEdit}
           onChange={handleChange}
         />
 
         <TextOrInput
           name="subtitle"
-          value={data?.subtitle}
+          value={data.subtitle}
           isEdit={isEdit}
           onChange={handleChange}
         />

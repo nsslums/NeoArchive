@@ -42,6 +42,8 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Button } from "~/components/ui/button";
 import { MoreVerticalIcon } from "lucide-react";
+import { toast } from "sonner";
+import { PiEyesFill } from "react-icons/pi";
 
 export type TagDetail = {
   id: number;
@@ -308,6 +310,22 @@ export default function SeasonEdit() {
     useState<SeasonDetail>(INIT_SEASON_DATA);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const [isEdited, setIsEdited] = useState(false);
+
+  useEffect(() => {
+    if (!isEdited) return;
+    toast("Watching at Change", {
+      icon: <PiEyesFill size={20} />,
+      action: {
+        label: "Submit",
+        onClick: () => {
+          console.log("Submit");
+          setIsEdited(false);
+        },
+      },
+    });
+  }, [isEdited]);
+
   useEffect(() => {
     const updatedSeason = animeData.series
       .flatMap((series) => series.season)
@@ -455,6 +473,7 @@ export default function SeasonEdit() {
           })),
         };
       });
+      setIsEdited(true);
       return;
     }
 
@@ -503,6 +522,7 @@ export default function SeasonEdit() {
         };
       });
     }
+    setIsEdited(true);
   }
 
   function getData(event: { active: Active; over: Over | null }) {
@@ -594,6 +614,7 @@ export default function SeasonEdit() {
         })),
       };
     });
+    setIsEdited(true);
   }
 
   function HandleChangeSeasonData(editData: SeasonDetail) {
@@ -618,8 +639,9 @@ export default function SeasonEdit() {
         })),
       };
     });
+    setIsEdited(true);
   }
-
+  
   return (
     <div>
       <SeasonEditDialog
@@ -700,7 +722,6 @@ export default function SeasonEdit() {
                   <DropdownMenuContent align="end" className="w-32">
                     <DropdownMenuItem
                       onSelect={() => {
-                        console.log(nowEditSeason.id);
                         setSelectedSeasonId(nowEditSeason.id);
                         setDialogOpen(true);
                       }}
@@ -735,7 +756,7 @@ export default function SeasonEdit() {
                         className="hover:bg-zinc-100"
                       >
                         <EpisodeItem
-                          data_init={episode}
+                          episode={episode}
                           setAnimeData={HandleChangeEpisodeData}
                         />
                       </EditSortable>
@@ -756,7 +777,7 @@ export default function SeasonEdit() {
               ) : (
                 <EditSortable className="opacity-85" id={""}>
                   <EpisodeItem
-                    data_init={
+                    episode={
                       nowEditSeason.episodes.find((ep) => ep.id == activeId)!
                     }
                   />
