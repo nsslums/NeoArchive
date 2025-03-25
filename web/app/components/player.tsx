@@ -40,6 +40,8 @@ type PlayerProps = {
 };
 
 export default function Player({ src, className, srcTitle }: PlayerProps) {
+  const ICON_SIZE = 20;
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRoot = useRef(null);
   const hideControlsTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -61,7 +63,8 @@ export default function Player({ src, className, srcTitle }: PlayerProps) {
 
   const [hlsInstance, setHlsInstance] = useState<Hls | null>(null);
   const [qualities, setQualities] = useState<Qualitiy[]>([]);
-  const [selectedQuality, setSelectedQuality] = useState<number>(-1);
+  const [selectedQualityIndex, setselectedQualityIndex] = useState<number>(-1);
+  const [hlsUseQuality, setHlsUseQuality] = useState("");
 
   useEffect(() => {
     const video = videoRef.current;
@@ -97,6 +100,7 @@ export default function Player({ src, className, srcTitle }: PlayerProps) {
           }`
         );
         console.log(`📶 Bitrate: ${hls?.levels[data.level]?.bitrate}bps`);
+        setHlsUseQuality(`${hls?.levels[data.level]?.height}p`);
       });
 
       video
@@ -376,7 +380,7 @@ export default function Player({ src, className, srcTitle }: PlayerProps) {
     if (hlsInstance) {
       console.log(level);
       hlsInstance.nextLevel = level;
-      setSelectedQuality(level);
+      setselectedQualityIndex(level);
       setPlayerStatus((preState) => ({
         ...preState,
         showSettings: !preState.showSettings,
@@ -466,18 +470,31 @@ export default function Player({ src, className, srcTitle }: PlayerProps) {
               }`}
             >
               <ul className="max-h-40 overflow-y-scroll inline-block bg-black rounded-lg p-1 text-sm space-y-2">
-                {qualities.map((q) => (
-                  <li
-                    key={q.level}
-                    value={q.level}
-                    onClick={() => handleChangeLevel(q.level)}
-                    className={`cursor-pointer px-2 pr-4 py-1 rounded-sm hover:bg-gray-600  ${
-                      selectedQuality === q.level ? "bg-red-300" : ""
-                    }`}
-                  >
-                    {q.name}
-                  </li>
-                ))}
+                {qualities.map((q) =>
+                  q.level == -1 && selectedQualityIndex == -1 ? (
+                    <li
+                      key={q.level}
+                      value={q.level}
+                      onClick={() => handleChangeLevel(q.level)}
+                      className={`cursor-pointer px-2 pr-4 py-1 rounded-sm hover:bg-gray-600  ${
+                        selectedQualityIndex === q.level ? "bg-red-300" : ""
+                      }`}
+                    >
+                      {q.name} ({hlsUseQuality})
+                    </li>
+                  ) : (
+                    <li
+                      key={q.level}
+                      value={q.level}
+                      onClick={() => handleChangeLevel(q.level)}
+                      className={`cursor-pointer px-2 pr-4 py-1 rounded-sm hover:bg-gray-600  ${
+                        selectedQualityIndex === q.level ? "bg-red-300" : ""
+                      }`}
+                    >
+                      {q.name}
+                    </li>
+                  )
+                )}
               </ul>
             </div>
             <div className="backdrop-blur-sm px-4 pb-3">
@@ -527,9 +544,9 @@ export default function Player({ src, className, srcTitle }: PlayerProps) {
                     }}
                   >
                     {playerStatus.isPlay ? (
-                      <FaPause size={18} />
+                      <FaPause size={ICON_SIZE} />
                     ) : (
-                      <FaPlay size={18} />
+                      <FaPlay size={ICON_SIZE} />
                     )}
                   </button>
                   <div
@@ -549,9 +566,9 @@ export default function Player({ src, className, srcTitle }: PlayerProps) {
                   >
                     <button onClick={toggleMute}>
                       {playerStatus.isMuted ? (
-                        <FaVolumeXmark size={18} />
+                        <FaVolumeXmark size={ICON_SIZE} />
                       ) : (
-                        <FaVolumeLow size={18} />
+                        <FaVolumeLow size={ICON_SIZE} />
                       )}
                     </button>
                     <div
@@ -594,19 +611,19 @@ export default function Player({ src, className, srcTitle }: PlayerProps) {
                 <div className="flex gap-3 items-center">
                   <button onClick={toggleSubtitle}>
                     {playerStatus.showSubtitle ? (
-                      <MdOutlineSubtitles size={18} />
+                      <MdOutlineSubtitles size={ICON_SIZE} />
                     ) : (
-                      <MdOutlineSubtitlesOff size={18} />
+                      <MdOutlineSubtitlesOff size={ICON_SIZE} />
                     )}
                   </button>
                   <button onClick={toggleSettings}>
-                    <RiSettings3Fill size={18} />
+                    <RiSettings3Fill size={ICON_SIZE} />
                   </button>
                   <button onClick={handlePip}>
                     {playerStatus.isPip ? (
-                      <PiPictureInPictureFill size={18} />
+                      <PiPictureInPictureFill size={ICON_SIZE} />
                     ) : (
-                      <PiPictureInPicture size={18} />
+                      <PiPictureInPicture size={ICON_SIZE} />
                     )}
                   </button>
                   <button
@@ -614,7 +631,7 @@ export default function Player({ src, className, srcTitle }: PlayerProps) {
                       move(-10);
                     }}
                   >
-                    <IoReturnDownBack size={18} />
+                    <IoReturnDownBack size={ICON_SIZE} />
                   </button>
                   <button
                     onClick={() => {
@@ -622,7 +639,7 @@ export default function Player({ src, className, srcTitle }: PlayerProps) {
                     }}
                     className="rotate-180"
                   >
-                    <IoReturnDownBack size={18} />
+                    <IoReturnDownBack size={ICON_SIZE} />
                   </button>
                   <button
                     onClick={() => {
@@ -630,9 +647,9 @@ export default function Player({ src, className, srcTitle }: PlayerProps) {
                     }}
                   >
                     {playerStatus.isFullScreen ? (
-                      <RiFullscreenExitLine size={18} />
+                      <RiFullscreenExitLine size={ICON_SIZE} />
                     ) : (
-                      <RiFullscreenFill size={18} />
+                      <RiFullscreenFill size={ICON_SIZE} />
                     )}
                   </button>
                 </div>
