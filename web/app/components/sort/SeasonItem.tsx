@@ -1,12 +1,26 @@
-import { UniqueIdentifier } from "@dnd-kit/core";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { MoreVerticalIcon } from "lucide-react";
+import { SeasonDetail } from "~/routes/edit.mock";
 
-export function MenuSeasonItem({ value }: { value: string }) {
+export function SeasonItem({
+  season,
+  setSelectedSeasonId,
+  setDialogOpen,
+}: {
+  season: SeasonDetail;
+  setSelectedSeasonId: React.Dispatch<React.SetStateAction<number>>;
+  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   return (
     <div className="w-full p-2 flex justify-between items-center gap-1">
-      <span>{value}</span>
+      <span>{season.title}</span>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -19,7 +33,15 @@ export function MenuSeasonItem({ value }: { value: string }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() => {
+              setSelectedSeasonId(season.id);
+              setDialogOpen(true);
+            }}
+          >
+            <span>Edit</span>
+          </DropdownMenuItem>
+
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <span className="text-red-800">Delete</span>

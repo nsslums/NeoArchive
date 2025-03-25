@@ -15,7 +15,11 @@ type Props = {
 
 export function SeriesAccordion({ data, children }: Props) {
   return (
-    <Accordion type="multiple" className="w-full" defaultValue={[data.id.toString()]}>
+    <Accordion
+      type="multiple"
+      className="w-full"
+      defaultValue={[data.id.toString()]}
+    >
       <AccordionItem value={data.id.toString()}>
         <AccordionTrigger>
           <div className="flex flex-row gap-2 items-center">
@@ -23,7 +27,9 @@ export function SeriesAccordion({ data, children }: Props) {
             <span className="flex-1">{data.title}</span>
           </div>
         </AccordionTrigger>
-        <AccordionContent>{children}</AccordionContent>
+        <AccordionContent>
+          <div className="p-1">{children}</div>
+        </AccordionContent>
       </AccordionItem>
     </Accordion>
   );
