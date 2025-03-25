@@ -2,8 +2,6 @@ import type { MetaFunction } from "@remix-run/node";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import { PiArrowsClockwiseBold } from "react-icons/pi";
 import { AnimeCard } from "~/components/animeCard";
-import Player from "~/components/player";
-import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
   return [

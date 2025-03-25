@@ -24,6 +24,11 @@ module.exports = {
   // Base config
   extends: ["eslint:recommended"],
 
+  plugins: ["react-refresh"],
+  rules: {
+    "react-refresh/only-export-components": "error",
+  },
+
   overrides: [
     // React
     {

@@ -2,7 +2,6 @@ import { Link } from "@remix-run/react";
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
