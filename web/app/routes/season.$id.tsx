@@ -19,12 +19,12 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function Season() {
   const season_data = useLoaderData<typeof loader>();
 
-  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   return (
     <div>
       <div className="flex gap-6">
         <img
-          className=" rounded-xl"
+          className="rounded-xl max-w-[50%] h-auto aspect-video"
           src="https://cs1.animestore.docomo.ne.jp/anime_kv/img/27/62/2/27622_1_1.png?1735254239003"
         />
         <div className="flex flex-col gap-4">
@@ -35,6 +35,9 @@ export default function Season() {
             <Skeleton className="h-6 w-[100px]" />
             <Skeleton className="h-6 w-[50px]" />
           </div>
+          <Skeleton className="h-6 w-[300px]" />
+          <Skeleton className="h-6 w-[600px]" />
+          <Skeleton className="flex-1 w-full" />
         </div>
       </div>
       <div className="flex flex-col gap-4 mt-12">
