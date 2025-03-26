@@ -28,7 +28,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get series */
+        get: operations["GetSeries"];
         put?: never;
         post?: never;
         /** Delete series */
@@ -132,7 +133,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get anime season */
+        get: operations["GetAnimeSeason"];
         put?: never;
         post?: never;
         /** Delete anime season */
@@ -154,6 +156,59 @@ export interface paths {
         put: operations["UpdateAnimeSeason"];
         /** Create anime season */
         post: operations["CreateAnimeSeason"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cast_list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get cast list */
+        get: operations["GetCastList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cast/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get cast */
+        get: operations["GetCast"];
+        put?: never;
+        post?: never;
+        /** Delete cast */
+        delete: operations["DeleteCast"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cast": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update cast */
+        put: operations["UpdateCast"];
+        /** Create cast */
+        post: operations["CreateCast"];
         delete?: never;
         options?: never;
         head?: never;
@@ -184,7 +239,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get anime episode */
+        get: operations["GetAnimeEpisode"];
         put?: never;
         post?: never;
         /** Delete anime episode */
@@ -286,25 +342,31 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        Series: {
-            /** Series ID */
-            id: number;
+        SeriesBase: {
             /** title */
             title: string;
-            /** tags */
-            tags?: components["schemas"]["Tag"][];
+            /** tags_id */
+            tags_id?: number[];
         };
-        Tag: {
-            /** Tag ID */
+        Series: components["schemas"]["SeriesBase"] & {
+            /** Series ID */
             id: number;
+        };
+        TagBase: {
             /** Tag name */
             name: string;
         };
-        AnimeSeason: {
-            /** Season ID */
+        Tag: components["schemas"]["TagBase"] & {
+            /** Tag ID */
             id: number;
+        };
+        AnimeSeasonBase: {
             /** Series ID */
             series_id: number;
+            /** casts_id */
+            casts_id?: number[];
+            /** Display number */
+            display_number?: number;
             /** title */
             title: string;
             /**
@@ -318,45 +380,61 @@ export interface components {
              */
             cours?: string;
             /**
-             * cast
-             * @description 出演者
-             */
-            cast?: string;
-            /**
              * production
              * @description 制作会社
              */
             production?: string;
         };
-        AnimeEpisode: {
-            /** Episode ID */
+        AnimeSeason: components["schemas"]["AnimeSeasonBase"] & {
+            /** Season ID */
             id: number;
+        };
+        CastBase: {
+            /** Cast name */
+            name: string;
+        };
+        Cast: components["schemas"]["CastBase"] & {
+            /** Cast ID */
+            id: number;
+        };
+        AnimeEpisodeBase: {
             /** Season ID */
             season_id: number;
             /** Video ID */
-            video_id?: number;
+            video_id: number;
+            /** Display number */
+            display_number?: number;
             /** Episode number */
             number?: string;
             /** Episode subtitle */
             subtitle?: string;
         };
-        Video: {
+        AnimeEpisode: components["schemas"]["AnimeEpisodeBase"] & {
+            /** Episode ID */
+            id: number;
+        };
+        VideoBase: {
+            /**
+             * Broadcast time
+             * Format: date-time
+             */
+            broadcast_time: string;
+            /** Video length */
+            length?: number;
+        };
+        Video: components["schemas"]["VideoBase"] & {
             /** Video ID */
             id: number;
-            /** Broadcast time */
-            broadcast_time?: number;
-            /** Playback time */
-            playback_time?: number;
         };
-        VideoLog: {
-            /** Video log ID */
-            id: number;
+        VideoLogBase: {
             /** Video ID */
             video_id: number;
-            /** User ID */
-            user_id: number;
             /** Playback time */
             playback_time: number;
+        };
+        VideoLog: components["schemas"]["VideoLogBase"] & {
+            /** Video log ID */
+            id: number;
         };
         DefaultErrorResponse: {
             /** Error message */
@@ -390,6 +468,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Series"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DefaultErrorResponse"];
+                };
+            };
+        };
+    };
+    GetSeries: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Series ID */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Series"];
                 };
             };
             /** @description Error */
@@ -475,7 +585,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Series"];
+                "application/json": components["schemas"]["SeriesBase"];
             };
         };
         responses: {
@@ -485,7 +595,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Series"];
+                    "application/json": components["schemas"]["SeriesBase"];
                 };
             };
             /** @description Error */
@@ -600,7 +710,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Tag"];
+                "application/json": components["schemas"]["TagBase"];
             };
         };
         responses: {
@@ -610,7 +720,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Tag"];
+                    "application/json": components["schemas"]["TagBase"];
                 };
             };
             /** @description Error */
@@ -643,6 +753,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AnimeSeason"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DefaultErrorResponse"];
+                };
+            };
+        };
+    };
+    GetAnimeSeason: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Season ID */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnimeSeason"];
                 };
             };
             /** @description Error */
@@ -728,7 +870,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AnimeSeason"];
+                "application/json": components["schemas"]["AnimeSeasonBase"];
             };
         };
         responses: {
@@ -738,7 +880,164 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AnimeSeason"];
+                    "application/json": components["schemas"]["AnimeSeasonBase"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DefaultErrorResponse"];
+                };
+            };
+        };
+    };
+    GetCastList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Cast"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DefaultErrorResponse"];
+                };
+            };
+        };
+    };
+    GetCast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Cast ID */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Cast"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DefaultErrorResponse"];
+                };
+            };
+        };
+    };
+    DeleteCast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Cast ID */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DefaultErrorResponse"];
+                };
+            };
+        };
+    };
+    UpdateCast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Cast"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Cast"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DefaultErrorResponse"];
+                };
+            };
+        };
+    };
+    CreateCast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Cast"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Cast"];
                 };
             };
             /** @description Error */
@@ -771,6 +1070,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AnimeEpisode"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DefaultErrorResponse"];
+                };
+            };
+        };
+    };
+    GetAnimeEpisode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Episode ID */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnimeEpisode"];
                 };
             };
             /** @description Error */
@@ -856,7 +1187,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AnimeEpisode"];
+                "application/json": components["schemas"]["AnimeEpisodeBase"];
             };
         };
         responses: {
@@ -866,7 +1197,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AnimeEpisode"];
+                    "application/json": components["schemas"]["AnimeEpisodeBase"];
                 };
             };
             /** @description Error */
@@ -984,7 +1315,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Video"];
+                "application/json": components["schemas"]["VideoBase"];
             };
         };
         responses: {
@@ -994,7 +1325,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Video"];
+                    "application/json": components["schemas"]["VideoBase"];
                 };
             };
             /** @description Error */
@@ -1049,7 +1380,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["VideoLog"];
+                "application/json": components["schemas"]["VideoLogBase"];
             };
         };
         responses: {
@@ -1059,7 +1390,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["VideoLog"];
+                    "application/json": components["schemas"]["VideoLogBase"];
                 };
             };
             /** @description Error */

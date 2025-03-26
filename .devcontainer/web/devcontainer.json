@@ -6,7 +6,7 @@
   "mounts": [
     {
       "source": "node_modules",
-      "target": "/workspaces/iass/web/node_modules",
+      "target": "/workspaces/NeoArchive/web/node_modules",
       "type": "volume"
     }
   ],
@@ -20,5 +20,5 @@
       ]
     }
   },
-  "postStartCommand": "sudo chown -R node:node /workspaces/iass/web/node_modules"
+  "postStartCommand": "sudo chown -R node:node /workspaces/NeoArchive/web/node_modules"
 }

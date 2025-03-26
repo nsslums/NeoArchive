@@ -2,7 +2,6 @@ import { Link } from "@remix-run/react";
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
@@ -19,16 +18,20 @@ import {
 
 const data: { title: string; href: string }[] = [
   {
-    title: "Page 1",
-    href: "/page1",
+    title: "Home",
+    href: "/",
   },
   {
-    title: "Page 2",
-    href: "/page2",
+    title: "Season 1",
+    href: "/season/1",
   },
   {
-    title: "Page 3",
-    href: "/page3",
+    title: "Play 1",
+    href: "/play/1",
+  },
+  {
+    title: "Edit mock",
+    href: "/edit/mock",
   },
 ];
 
