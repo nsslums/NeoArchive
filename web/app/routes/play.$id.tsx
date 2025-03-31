@@ -6,6 +6,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { EpisodeDetail, SeasonDetail } from "./edit.mock";
 import createClient from "openapi-fetch";
 import type { paths } from "api/schema";
+import { FaCaretRight } from "react-icons/fa6";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const client = createClient<paths>({ baseUrl: "http://localhost:1323" });
@@ -58,25 +59,25 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function Play() {
   const { season, episode } = useLoaderData<typeof loader>();
 
-  const src =
-    "https://devstreaming-cdn.apple.com/videos/streaming/examples/adv_dv_atmos/main.m3u8";
   // const src =
-  //   "http://localhost:8080/master.m3u8";
+  //   "https://devstreaming-cdn.apple.com/videos/streaming/examples/adv_dv_atmos/main.m3u8";
+  const src = "http://localhost:8080/";
 
   return (
     <div className="flex gap-4 flex-col lg:flex-row">
       <div className="flex flex-col gap-4 flex-1">
         <Player
-          src={src + "?" + episode.video_id}
+          src={src + episode.video_id + "/master.m3u8"}
           srcTitle={episode.subtitle}
           className="w-full"
         />
-        <div className="flex gap-2 flex-col">
+        <Card className="flex gap-2 flex-col p-4">
           {/* <Skeleton className="h-6 w-[600px]" />
           <Skeleton className="h-4 w-[200px]" /> */}
           <h1 className="text-2xl tracking-wide">{episode.subtitle}</h1>
           <h2 className="text-lg">{season.title}</h2>
-        </div>
+          <p className="mt-1">{season.synopsis}</p>
+        </Card>
       </div>
       <div>
         <Card className="w-full p-4 lg:w-[400px] lg:h-[calc((1024px-400px-1rem)*9/16)] xl:h-[calc((1280px-400px-1rem)*9/16)] 2xl:h-[calc((1536px-400px-1rem)*9/16)]">
@@ -87,10 +88,12 @@ export default function Play() {
                 key={index}
                 className="relative p-2 hover:bg-zinc-100 rounded-md"
               >
-                <Link to={`/play/${ep.id}`} className="flex gap-2">
+                <Link to={`/play/${ep.id}`} className="flex gap-2 items-center">
+                  {episode.id === ep.id ? <FaCaretRight size={16} /> : <span className="w-4"></span>}
                   <Skeleton className="w-[120px] h-20" />
-                  <div className="flex flex-col gap-2 py-2">
-                    <p className="text-lg">{ep.subtitle}</p>
+                  <div className="flex flex-col gap-1">
+                    <p className="text-md">{ep.number}</p>
+                    <p className="text-md">{ep.subtitle}</p>
                     <Skeleton className="h-4 w-[150px]" />
                   </div>
                 </Link>
@@ -104,7 +107,7 @@ export default function Play() {
               <Link to={`/play/${ep.id}`} className="flex gap-2">
                 <Skeleton className="w-[120px] h-20" />
                 <div className="flex flex-col gap-2 py-2">
-                  <Skeleton className="h-4 w-[200px]" />
+                  <p className="text-sm">{ep.subtitle}</p>
                   <Skeleton className="h-4 w-[150px]" />
                 </div>
               </Link>

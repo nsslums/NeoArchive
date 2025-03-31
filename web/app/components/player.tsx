@@ -425,6 +425,7 @@ export default function Player({ src, className, srcTitle }: PlayerProps) {
           setPlayerStatus((preState) => ({
             ...preState,
             showController: false,
+            showSettings: false,
           }))
         }
         tabIndex={0}
