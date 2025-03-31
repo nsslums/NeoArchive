@@ -5,80 +5,54 @@ import { Card } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
 import { EpisodeDetail, SeasonDetail } from "./edit.mock";
 import createClient from "openapi-fetch";
-import { paths } from "api/schema";
+import type { paths } from "api/schema";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  // const client = createClient<paths>({ baseUrl: process.env.API_URL });
-  // const { data: episode } = await client.GET("/anime/episode/{id}", {
-  //   params: {
-  //     path: { id: Number(params.id) },
-  //   },
-  // });
+  const client = createClient<paths>({ baseUrl: "http://localhost:1323" });
 
-  // if (!episode) return;
+  const { data: episode } = await client.GET("/anime/episode/{id}", {
+    params: {
+      path: { id: Number(params.id) },
+    },
+  });
+  if (!episode) {
+    throw new Error("NO episode DATA.");
+  }
 
-  // const { data: season } = await client.GET("/anime/episode_list/{season_id}", {
-  //   params: {
-  //     path: { season_id: episode.season_id },
-  //   },
-  // });
-  // if (!season) {
-  //   return;
-  // }
+  const { data: season_data } = await client.GET("/anime/season/{id}", {
+    params: {
+      path: { id: episode.season_id },
+    },
+  });
+  if (!season_data) {
+    throw new Error("NO SEASON DATA.");
+  }
 
-  // return {season: season, episode: episode}
-
-  const episode: EpisodeDetail = {
-    id: Number(params.id),
-    number: "1",
-    subtitle: "Episode 1-1",
-    display_number: 0,
-    video_id: Number(params.id),
-    season_id: 111111,
-  };
-
-  const episode1: EpisodeDetail = {
-    id: 1000,
-    number: "1",
-    subtitle: "Episode 1-1",
-    display_number: 0,
-    video_id: 1000,
-    season_id: 111111,
-  };
-
-  const episode2: EpisodeDetail = {
-    id: 2000,
-    number: "1",
-    subtitle: "Episode 1-1",
-    display_number: 0,
-    video_id: 2000,
-    season_id: 111111,
-  };
+  const { data: episode_list } = await client.GET(
+    "/anime/episode_list/{season_id}",
+    {
+      params: {
+        path: { season_id: episode.season_id },
+      },
+    }
+  );
+  if (!season_data) {
+    throw new Error("NO episode_list DATA.");
+  }
 
   const season: SeasonDetail = {
-    id: 101,
-    title: "1",
-    display_number: 0,
-    episodes: [
-      episode1,
-      episode2,
-      episode1,
-      episode2,
-      episode1,
-      episode2,
-      episode1,
-      episode2,
-      episode1,
-      episode2,
-    ],
+    id: season_data.id,
+    series_id: season_data.series_id,
     casts: [],
-    synopsis: "",
-    cours: "",
-    production: "",
+    display_number: season_data.display_number || 0,
+    title: season_data.title,
+    synopsis: season_data.synopsis || "",
+    cours: season_data.cours || "",
+    production: season_data.production || "",
+    episodes: episode_list as EpisodeDetail[],
   };
 
-
-  return { season: season, episode: episode };
+  return { season: season, episode: episode as EpisodeDetail };
 };
 
 export default function Play() {
@@ -98,8 +72,10 @@ export default function Play() {
           className="w-full"
         />
         <div className="flex gap-2 flex-col">
-          <Skeleton className="h-6 w-[600px]" />
-          <Skeleton className="h-4 w-[200px]" />
+          {/* <Skeleton className="h-6 w-[600px]" />
+          <Skeleton className="h-4 w-[200px]" /> */}
+          <h1 className="text-2xl tracking-wide">{episode.subtitle}</h1>
+          <h2 className="text-lg">{season.title}</h2>
         </div>
       </div>
       <div>
@@ -107,11 +83,14 @@ export default function Play() {
           <h2 className=" text-lg font-semibold mb-2">次に再生</h2>
           <ul className="max-h-[316px] lg:max-h-[calc((1024px-400px-1rem)*9/16-3.25rem)] xl:max-h-[calc((1280px-400px-1rem)*9/16-3.25rem)] 2xl:max-h-[calc((1536px-400px-1rem)*9/16-3.25rem)] overflow-auto">
             {season.episodes.map((ep, index) => (
-              <li key={index} className="relative py-2">
+              <li
+                key={index}
+                className="relative p-2 hover:bg-zinc-100 rounded-md"
+              >
                 <Link to={`/play/${ep.id}`} className="flex gap-2">
                   <Skeleton className="w-[120px] h-20" />
                   <div className="flex flex-col gap-2 py-2">
-                    <Skeleton className="h-4 w-[200px]" />
+                    <p className="text-lg">{ep.subtitle}</p>
                     <Skeleton className="h-4 w-[150px]" />
                   </div>
                 </Link>
